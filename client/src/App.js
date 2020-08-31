@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { CssBaseline } from '@material-ui/core';
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -18,11 +20,14 @@ function App() {
   if (loading) return null;
 
   return (
-    <BrowserRouter>
-      <Route path="/">
-        <h1>My Home Page</h1>
-      </Route>
-    </BrowserRouter>
+    <>
+      <CssBaseline />
+      <BrowserRouter>
+        <Route path="/">
+          <h1>My Home Page</h1>
+        </Route>
+      </BrowserRouter>
+    </>
   );
 }
 
