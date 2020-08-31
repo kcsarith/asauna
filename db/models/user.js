@@ -29,13 +29,13 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       imageUrl: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
       },
       displayBackgroundUrl: {
         type: DataTypes.STRING
       },
       status: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
       },
       pronouns: {
         type: DataTypes.STRING
