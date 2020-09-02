@@ -5,8 +5,7 @@ const { check } = require("express-validator");
 const { User } = require("../../db/models");
 const { handleValidationErrors } = require("../util/validation");
 const { requireUser, generateToken, AuthenticationError } = require("../util/auth");
-const { jwtConfig: { expiresIn }} = require('../../config');
-
+const { jwtConfig: { expiresIn } } = require('../../config');
 const router = express.Router();
 
 const validateLogin = [
@@ -27,6 +26,8 @@ router.get(
   })
 );
 
+
+
 router.put(
   "/",
   validateLogin,
@@ -44,8 +45,14 @@ router.put(
         user,
       });
     }
-    return next(new Error('Invalid credentials'));
+    return next(new Error('The username or password is not correct.'));
   })
 );
+
+router.delete("/", asyncHandler(async (req, res) => {
+  console.log('Reached delete route')
+  res.clearCookie('token');
+  return res.json({ message: 'success' });
+}));
 
 module.exports = router;
