@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux'
 
+
 import { AppBar, CssBaseline, Button, Link, Typography, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import '../styles/site-header.css';
 
-
+import LoginModal from './LoginModal';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,12 +40,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Pricing() {
+export default function SiteHeader() {
     const classes = useStyles();
 
     const isLoggedIn = useSelector(state => state.auth.id)
     return (
-        <Toolbar className={classes.toolbar} variant="dense">
+        <Toolbar className={classes.toolbar} component="header" variant="dense">
             <CssBaseline />
             <nav>
 
@@ -68,19 +68,15 @@ export default function Pricing() {
                 <Link variant="button" color="textPrimary" href="#" className={classes.link}>
                     Contact Sales
             </Link>
-
-                {!!isLoggedIn ? <Link variant="button" color="textPrimary" href="/login" className={classes.link}>
-                    <Button href="#" color="primary" variant="outlined" className={classes.link}>Go to Asauna</Button>
-
-                </Link> : <><Link variant="button" color="textPrimary" href="/login" className={classes.link}>
-                    Login
-                </Link><Button href="#" color="primary" variant="outlined" className={classes.link}>
-                            Try for free
-                </Button></>}
-
-
-
+                {
+                    !!isLoggedIn ?
+                        <Button href="/" color="primary" variant="outlined" className={classes.link}>Go to Asauna</Button> :
+                        <>
+                            <LoginModal />
+                            <Button href="/create-account" color="primary" variant="outlined" className={classes.link}>Try for free</Button>
+                        </>
+                }
             </nav>
-        </Toolbar>
+        </Toolbar >
     )
 }

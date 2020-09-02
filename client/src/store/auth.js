@@ -19,7 +19,7 @@ export const removeUser = () => {
 }
 
 
-export const login = (username, password) => {
+export const login = (username, password, rememberMe) => {
     return async dispatch => {
         const res = await fetch('./api/session', {
             method: "put",
@@ -27,7 +27,7 @@ export const login = (username, password) => {
                 "Content-Type": "application/json",
                 "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password, rememberMe })
         });
         res.data = await res.json();
         const user = res.data.user;
@@ -51,7 +51,8 @@ export const logout = () => async dispatch => {
 }
 function loadUser() {
     const authToken = Cookies.get("token");
-    if (authToken) {
+    const rememberMe = Cookies.get("rememberMe")
+    if (authToken && rememberMe === 'true') {
         try {
             const payload = authToken.split(".")[1];
             const decodedPayload = atob(payload);
@@ -60,13 +61,13 @@ function loadUser() {
             return data;
         } catch (e) {
             Cookies.remove("token");
+            Cookies.remove("rememberMe")
         }
     }
     return {};
 }
 
-window.login = login;
-window.logout = logout;
+
 export default function authReducer(state = loadUser(), action) {
     switch (action.type) {
         case SET_USER:

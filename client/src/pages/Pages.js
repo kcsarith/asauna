@@ -6,6 +6,7 @@ import SignupForm from '../components/SignupForm';
 import Pricing from './Pricing';
 import SiteHeader from '../components/SiteHeader'
 
+import SiteFooter from '../components/SiteFooter'
 export default function Pages() {
     return (
         <>
@@ -16,6 +17,7 @@ export default function Pages() {
                 <Route exact path="/create-account" component={SignupForm} />
                 <Route exact path="/pricing" component={Pricing} />
             </Switch>
+            <SiteFooter />
         </>
     )
 }
