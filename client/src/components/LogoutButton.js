@@ -9,11 +9,12 @@ function LogoutButton() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(logout());
+    return <Redirect to="login" />
   }
-  if (!isLoggedIn) return <Redirect to="/login" />;
   return (
     <form onSubmit={handleSubmit}>
       <button type="submit">Logout</button>
+      {/* {!isLoggedIn && <Redirect to="login" />} */}
     </form>
   );
 }
