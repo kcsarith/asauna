@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { signup } from '../store/signup';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 // Material UI
-import { Avatar, Button, Container, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, } from '@material-ui/core';
+import { Avatar, Button, Container, TextField, Link, Grid, Box, Typography, } from '@material-ui/core';
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -60,6 +60,7 @@ export default function SignUp() {
     const classes = useStyles();
 
     const dispatch = useDispatch();
+    let history = useHistory();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -80,9 +81,10 @@ export default function SignUp() {
             setEmailErrorMessage((emailErrorsIndex > -1) ? 'Email already exists' : ' ');
             setPasswordErrorMessage((passwordErrorsIndex > -1) ? 'password must be 8 or more characters' : ' ');
         }
+        if (res.ok) {
+            history.push("/workspace");
+        }
     }
-
-    const isSignedUp = useSelector(state => state.signup.id)
     return (
         <div className={classes.signupBackground}>
             <Container maxWidth="sm">
@@ -109,7 +111,6 @@ export default function SignUp() {
                                         <label>Username</label>
                                         <TextField
                                             error={userErrorMessage !== ' '}
-                                            id="outlined-error-helper-text"
                                             variant="outlined"
                                             required
                                             fullWidth
@@ -125,7 +126,6 @@ export default function SignUp() {
                                         <label>Email</label>
                                         <TextField
                                             error={emailErrorMessage !== ' '}
-                                            id="outlined-error-helper-text"
                                             variant="outlined"
                                             required
                                             fullWidth
@@ -142,7 +142,6 @@ export default function SignUp() {
                                         <label>Password</label>
                                         <TextField
                                             error={passwordErrorMessage !== ' '}
-                                            id="outlined-error-helper-text"
                                             variant="outlined"
                                             required
                                             fullWidth
@@ -180,7 +179,6 @@ export default function SignUp() {
                 <Box mt={5}>
                 </Box>
             </Container>
-            {!!isSignedUp && <Redirect to="/workspace" />}
         </div >
     );
 }

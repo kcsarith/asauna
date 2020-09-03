@@ -25,7 +25,7 @@ import Deposits from '../components/workspace/Deposits';
 import Orders from '../components/workspace/Orders';
 
 
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 function Copyright() {
     return (
@@ -132,7 +132,7 @@ export default function Workspace() {
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-    const auth = useSelector(state => state.auth)
+    // const auth = useSelector(state => state.auth) Will be used when the layout is done.
     return (
 
         <div className={classes.root}>

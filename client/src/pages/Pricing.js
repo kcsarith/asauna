@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, CardHeader, Grid, Typography, Link, Container, Box } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, Grid, Typography, Container } from '@material-ui/core';
 
 import { StarBorder as StarIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -86,24 +86,6 @@ const tiers = [
     //     buttonText: 'Contact us',
     //     buttonVariant: 'outlined',
     // },
-];
-const footers = [
-    {
-        title: 'Company',
-        description: ['Team', 'History', 'Contact us', 'Locations'],
-    },
-    {
-        title: 'Features',
-        description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
-    },
-    {
-        title: 'Resources',
-        description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
-    },
-    {
-        title: 'Legal',
-        description: ['Privacy policy', 'Terms of use'],
-    },
 ];
 
 export default function Pricing() {

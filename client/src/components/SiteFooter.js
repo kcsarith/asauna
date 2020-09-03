@@ -1,7 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux'
 
-import { Container, Grid, Box, Link, Typography, Toolbar } from '@material-ui/core';
+import { Container, Grid, Box, Link, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const footers = [

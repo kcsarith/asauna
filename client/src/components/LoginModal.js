@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom';
 
-import { Button, TextField, Modal, DialogTitle, Avatar, Link, Typography, FormControlLabel, Checkbox, Grid, Container } from '@material-ui/core';
-import { FullscreenExit } from '@material-ui/icons';
+import { Button, TextField, Modal, Link, Typography, Grid, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -58,15 +57,18 @@ export default function LoginModal() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState([]);
-  const isLoggedIn = useSelector(state => state.auth.id)
+
   const dispatch = useDispatch();
+  let history = useHistory();
   const classes = useStyles();
   const handleSubmit = async (e) => {
-    debugger
     e.preventDefault();
     const res = await dispatch(login(username, password));
     const message = res.data.message;
     if (!res.ok) setErrorMessages([message])
+    else {
+      history.push('/workspace')
+    }
   }
 
   return (
@@ -119,8 +121,6 @@ export default function LoginModal() {
               >
                 Login
           </Button>
-
-              {!!isLoggedIn && <Redirect to="/workspace" />}
               <Grid container justify="center">
                 <Grid item className="modal-signup-link">
                   <p>Don't have an account?&nbsp;

@@ -1,21 +1,17 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { logout } from '../store/auth';
-
+import { Button } from '@material-ui/core';
 function LogoutButton() {
-  const isLoggedIn = useSelector(state => state.auth.id)
   const dispatch = useDispatch();
-  const handleSubmit = async (e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
     await dispatch(logout());
-    return <Redirect to="login" />
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <button type="submit">Logout</button>
-      {/* {!isLoggedIn && <Redirect to="login" />} */}
-    </form>
+    <Button onClick={handleLogout}>
+      Logout
+    </Button>
   );
 }
 
