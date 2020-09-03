@@ -1,12 +1,16 @@
 import { createStore, compose, combineReducers, applyMiddleware } from 'redux';
-import { thunk } from 'redux-thunk';
+import thunk from 'redux-thunk';
 
+import auth from './auth'
+import signup from './signup'
 const rootReducer = combineReducers({
+  auth,
+  signup
 });
 
 let storeEnhancer;
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'production') {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   storeEnhancer = composeEnhancers(applyMiddleware(thunk));
 } else {

@@ -15,12 +15,40 @@ module.exports = {
       },
       username: {
         allowNull: false,
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(32),
         unique: true,
       },
       hashedPassword: {
         allowNull: false,
         type: Sequelize.STRING(60).BINARY,
+      },
+      imageUrl: {
+        type: Sequelize.STRING(255),
+        defaultValue: "",
+      },
+      displayBackgroundUrl: {
+        type: Sequelize.STRING(255),
+        defaultValue: "",
+      },
+      status: {
+        type: Sequelize.STRING(255),
+        defaultValue: "",
+      },
+      pronouns: {
+        type: Sequelize.STRING(255),
+        defaultValue: "",
+      },
+      roles: {
+        type: Sequelize.STRING(255),
+        defaultValue: "",
+      },
+      departmentOrTeam: {
+        type: Sequelize.STRING(64),
+        defaultValue: "",
+      },
+      aboutMe: {
+        type: Sequelize.TEXT(),
+        defaultValue: "",
       },
       createdAt: {
         allowNull: false,
