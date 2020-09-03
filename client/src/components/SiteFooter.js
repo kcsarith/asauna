@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 import { Container, Grid, Box, Link, Typography, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import '../styles/site-header.css';
 
 const footers = [
     {

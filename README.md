@@ -37,3 +37,9 @@ This is the backend for the Solo React project.
 8. Add environment variables on the heroku environment using the Heroku dashboard. (Setting Heroku Config Vars)[https://devcenter.heroku.com/articles/config-vars]
 
 9. profit
+
+
+# Material UI
+
+* theme color creator
+* https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=0288D1

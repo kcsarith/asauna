@@ -12,13 +12,29 @@ const {
 
 const validateSignup = [
   check("username", "must be at least one character long")
-    .isLength({ min: 1 }),
+    .isLength({ min: 1 })
+    .custom(async (username) => {
+      const existingUser =
+        await User.findOne({ where: { username } })
+
+      if (existingUser) {
+        throw new Error('already exists')
+      }
+    }),
   check("email", "must be a valid email")
     .exists()
-    .isEmail(),
-  check("password", "must be 6 or more characters")
+    .isEmail()
+    .custom(async (email) => {
+      const existingUser =
+        await User.findOne({ where: { email } })
+
+      if (existingUser) {
+        throw new Error('already exists')
+      }
+    }),
+  check("password", "must be 8 or more characters")
     .exists()
-    .isLength({ min: 6 })
+    .isLength({ min: 8 })
 ];
 
 const router = express.Router();

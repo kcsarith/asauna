@@ -3,34 +3,48 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Redirect } from 'react-router-dom';
 
 import { Button, TextField, Modal, DialogTitle, Avatar, Link, Typography, FormControlLabel, Checkbox, Grid, Container } from '@material-ui/core';
-import { LockOutlined as LockOutlinedIcon, FullscreenExit } from '@material-ui/icons';
+import { FullscreenExit } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 
 import { login } from '../store/auth';
 
+import '../styles/login-modal.css'
+
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(10),
+    paddingBottom: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    maxWidth: '730px'
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    minHeight: '500px',
-    // marginTop: theme.spacing(1),
+    paddingLeft: "10em",
+    paddingRight: "10em"
   },
   submit: {
-    // margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 2),
+    padding: '12px 12px !important'
   },
-}));
+  errorMessageContainer: {
+    marginBottom: theme.spacing(8),
+    fontWeight: 'bold',
+    padding: '1em',
+    color: 'black',
+    backgroundColor: '#ffedef'
+  }
+}
+));
 
 export default function LoginModal() {
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -43,61 +57,58 @@ export default function LoginModal() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]);
   const isLoggedIn = useSelector(state => state.auth.id)
   const dispatch = useDispatch();
   const classes = useStyles();
   const handleSubmit = async (e) => {
+    debugger
     e.preventDefault();
-    const res = await dispatch(login(username, password, rememberMe));
+    const res = await dispatch(login(username, password));
     const message = res.data.message;
     if (!res.ok) setErrorMessages([message])
   }
 
   return (
     <>
-      <Link variant="button" color="textPrimary" onClick={handleClickOpen}>
+      <Button onClick={handleClickOpen} className={classes.modalLink}>
         Login
-      </Link>
+      </Button>
       <Modal open={open} onClose={handleClose} >
-        <Container maxWidth="sm" pt={5} className={classes.paper}>
-          <DialogTitle id="form-dialog-title">
-            <Avatar className={classes.avatar}><LockOutlinedIcon /></Avatar>
-
-            <span component="h1" variant="h5">Sign in</span>
-          </DialogTitle>
-          <div >
+        <Container maxWidth="md" className={classes.paper}>
+          <Typography variant="h3" component="h2" className={classes.paper}>Log in</Typography>
+          {(errorMessages.length > 0) ? <ul className={classes.errorMessageContainer}> {errorMessages.map((errorMessage, index) => <li key={index}>{errorMessage}</li>)}</ul> : <></>}
+          <Container maxWidth="md"  >
             <form className={classes.form} onSubmit={handleSubmit}>
+              <label>Email/Username</label>
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                placeholder="demo@example.com"
                 name="email"
                 autoComplete="email"
                 autoFocus
                 value={username}
+                className='modal-form-input'
                 onChange={(e) => setUsername(e.target.value)}
               />
+              <label>Password</label>
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
                 name="password"
-                label="Password"
                 type="password"
                 id="password"
+                placeholder="password"
                 autoComplete="current-password"
                 value={password}
+                className='modal-form-input'
                 onChange={(e) => setPassword(e.target.value)}
-              />
-              <FormControlLabel
-                control={<Checkbox value={rememberMe} color="primary" onChange={(e) => setRememberMe(e.target.checked)} />}
-                label="Remember me"
               />
               <Button
                 type="submit"
@@ -108,18 +119,20 @@ export default function LoginModal() {
               >
                 Login
           </Button>
-              <Grid container>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+
+              {!!isLoggedIn && <Redirect to="/workspace" />}
+              <Grid container justify="center">
+                <Grid item className="modal-signup-link">
+                  <p>Don't have an account?&nbsp;
+                  <Link href="/create-account" variant="body2">Sign Up
                   </Link>
+                  </p>
                 </Grid>
               </Grid>
             </form>
-            {(errorMessages.length > 0) ? <ul> {errorMessages.map((errorMessage, index) => <li key={index}>{errorMessage}</li>)}</ul> : <></>}
-          </div>
-          {!!isLoggedIn && <Redirect to="/" />}
+          </Container>
         </Container>
+
       </Modal>
     </>
   );

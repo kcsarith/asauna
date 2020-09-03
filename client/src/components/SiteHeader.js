@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 
 import { AppBar, CssBaseline, Button, Link, Typography, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import LoginModal from './LoginModal';
-
+import { login } from '../store/auth'
 
 const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -40,10 +40,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SiteHeader() {
+export default () => {
     const classes = useStyles();
 
     const isLoggedIn = useSelector(state => state.auth.id)
+
+    const dispatch = useDispatch();
+    const handleClick = async function () {
+        dispatch(login('demo@example.com', 'password'))
+    }
+
     return (
         <Toolbar className={classes.toolbar} component="header" variant="dense">
             <CssBaseline />
@@ -68,12 +74,15 @@ export default function SiteHeader() {
                 <Link variant="button" color="textPrimary" href="#" className={classes.link}>
                     Contact Sales
             </Link>
+
                 {
                     !!isLoggedIn ?
-                        <Button href="/" color="primary" variant="outlined" className={classes.link}>Go to Asauna</Button> :
+                        <Button href="/workspace" variant="contained" color="primary" className={classes.link}>Go to Asauna</Button> :
                         <>
                             <LoginModal />
-                            <Button href="/create-account" color="primary" variant="outlined" className={classes.link}>Try for free</Button>
+                            <Button className={classes.link} onClick={handleClick}>Demo User</Button>
+
+                            <Button href="/create-account" variant="contained" color="primary" className={classes.link}>Try for free</Button>
                         </>
                 }
             </nav>

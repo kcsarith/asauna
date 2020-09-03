@@ -1,5 +1,7 @@
 import Cookies from 'js-cookie'
 
+import { setUser } from './auth'
+
 // This file includes the actions and reducer.
 export const CREATE_USER = 'CREATE_USER';
 export const DELETE_USER = 'DELETE_USER';
@@ -31,11 +33,10 @@ export const signup = (username, email, password) => {
         });
         res.data = await res.json();
         const user = res.data.user;
-        if (!res.ok) console.log(res.data.error.errors);
         if (res.ok) {
             dispatch(createUser(user));
+            dispatch(setUser(user));
         }
-        debugger
         return res;
     }
 }

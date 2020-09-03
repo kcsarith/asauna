@@ -19,7 +19,7 @@ export const removeUser = () => {
 }
 
 
-export const login = (username, password, rememberMe) => {
+export const login = (username, password) => {
     return async dispatch => {
         const res = await fetch('./api/session', {
             method: "put",
@@ -27,7 +27,7 @@ export const login = (username, password, rememberMe) => {
                 "Content-Type": "application/json",
                 "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
             },
-            body: JSON.stringify({ username, password, rememberMe })
+            body: JSON.stringify({ username, password })
         });
         res.data = await res.json();
         const user = res.data.user;
@@ -51,8 +51,7 @@ export const logout = () => async dispatch => {
 }
 function loadUser() {
     const authToken = Cookies.get("token");
-    const rememberMe = Cookies.get("rememberMe")
-    if (authToken && rememberMe === 'true') {
+    if (authToken) {
         try {
             const payload = authToken.split(".")[1];
             const decodedPayload = atob(payload);
@@ -61,7 +60,6 @@ function loadUser() {
             return data;
         } catch (e) {
             Cookies.remove("token");
-            Cookies.remove("rememberMe")
         }
     }
     return {};

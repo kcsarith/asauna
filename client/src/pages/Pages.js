@@ -1,23 +1,23 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
+
 import Homepage from './Homepage';
-import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
 import Pricing from './Pricing';
-import SiteHeader from '../components/SiteHeader'
+import Workspace from './Workspace'
 
+import SiteHeader from '../components/SiteHeader'
 import SiteFooter from '../components/SiteFooter'
 export default function Pages() {
     return (
         <>
-            <SiteHeader />
             <Switch>
-                <Route exact path="/" component={Homepage} />
-                <Route exact path="/login" component={LoginForm} />
+                
+                <Route exact path="/" render={() => <><SiteHeader /><Homepage /><SiteFooter /></>} />
                 <Route exact path="/create-account" component={SignupForm} />
-                <Route exact path="/pricing" component={Pricing} />
+                <Route exact path="/pricing" render={() => <><SiteHeader /><Pricing /><SiteFooter /></>} />
+                <Route exact path="/workspace" component={Workspace} />
             </Switch>
-            <SiteFooter />
         </>
     )
 }

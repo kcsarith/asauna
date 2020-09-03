@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
 import { signup } from '../store/signup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 // Material UI
 import { Avatar, Button, Container, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, } from '@material-ui/core';
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-      </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+
+
+import '../styles/login-modal.css'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+        paddingLeft: theme.spacing(4),
+        paddingRogjt: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -38,6 +33,27 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    footer: {
+        padding: theme.spacing(3, 2),
+        marginTop: 'auto',
+        backgroundColor:
+            theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+    },
+    signupBackground: {
+
+        padding: theme.spacing(3, 2),
+        height: '100vh',
+        backgroundColor: 'grey',
+    },
+    contents: {
+        backgroundColor: 'white'
+    },
+    profileImage: {
+        height: '128px !important',
+        width: '128px !important',
+        margin: '1em',
+        fontSize: '20px'
+    }
 }));
 
 export default function SignUp() {
@@ -48,90 +64,123 @@ export default function SignUp() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [userErrorMessage, setUserErrorMessage] = useState(' ');
+    const [emailErrorMessage, setEmailErrorMessage] = useState(' ');
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState(' ');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await dispatch(signup(username, email, password));
+        const res = await dispatch(signup(username, email, password));
+        if (res.data.error) {
+            const errors = res.data.error.errors;
+            const userErrorsIndex = errors.indexOf('username: already exists');
+            const emailErrorsIndex = errors.indexOf('email: already exists');
+            const passwordErrorsIndex = errors.indexOf('password: must be 8 or more characters');
+            setUserErrorMessage((userErrorsIndex > -1) ? 'Username already exists' : ' ');
+            setEmailErrorMessage((emailErrorsIndex > -1) ? 'Email already exists' : ' ');
+            setPasswordErrorMessage((passwordErrorsIndex > -1) ? 'password must be 8 or more characters' : ' ');
+        }
     }
 
+    const isSignedUp = useSelector(state => state.signup.id)
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign up
+        <div className={classes.signupBackground}>
+            <Container maxWidth="sm">
+                <LockOutlinedIcon />
+                <h2>Asauna</h2>
+            </Container>
+            <Container className={classes.contents} maxWidth="sm">
+                <div className={classes.paper}>
+                    <Typography component="h1" variant="h5">
+                        Please start by completing your profile
         </Typography>
-                <form className={classes.form} onSubmit={handleSubmit}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                                autoComplete="username"
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                type="email"
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                label="I want to receive inspiration, marketing promotions and updates via email."
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign Up
-          </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                Already have an account? Sign in
+                    <Grid container justify="center">
+                        <Grid item><span>Already have an account? </span>
+                            <Link href="/" variant="body2">
+                                Go back to the homepage
               </Link>
                         </Grid>
                     </Grid>
-                </form>
-            </div>
-            <Box mt={5}>
-                <Copyright />
-            </Box>
-        </Container>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={8}>
+                            <form className={classes.form} onSubmit={handleSubmit}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12}>
+                                        <label>Username</label>
+                                        <TextField
+                                            error={userErrorMessage !== ' '}
+                                            id="outlined-error-helper-text"
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="username"
+                                            name="username"
+                                            autoComplete="username"
+                                            placeholder="Demo-lition"
+                                            helperText={userErrorMessage}
+                                            onChange={(e) => { setUserErrorMessage(' '); return setUsername(e.target.value) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <label>Email</label>
+                                        <TextField
+                                            error={emailErrorMessage !== ' '}
+                                            id="outlined-error-helper-text"
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            autoComplete="email"
+                                            placeholder="demo@example.com"
+                                            helperText={emailErrorMessage}
+                                            onChange={(e) => { setEmailErrorMessage(' '); setEmail(e.target.value) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <label>Password</label>
+                                        <TextField
+                                            error={passwordErrorMessage !== ' '}
+                                            id="outlined-error-helper-text"
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            type="password"
+                                            id="password"
+                                            placeholder=""
+                                            helperText={passwordErrorMessage}
+                                            onChange={(e) => { setPasswordErrorMessage(' '); setPassword(e.target.value) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+                                <Button
+                                    disabled={username === '' && email === '' && password === ''}
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                >
+                                    Continue
+          </Button>
+
+                            </form>
+
+                        </Grid>
+
+                        <Grid item xs={12} sm={4} >
+                            <Avatar className={classes.profileImage}></Avatar>
+                        </Grid>
+                    </Grid>
+
+                </div>
+                <Box mt={5}>
+                </Box>
+            </Container>
+            {!!isSignedUp && <Redirect to="/workspace" />}
+        </div >
     );
 }
