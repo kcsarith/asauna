@@ -74,11 +74,18 @@ export default function SignUp() {
         const res = await dispatch(signup(username, email, password));
         if (res.data.error) {
             const errors = res.data.error.errors;
-            const userErrorsIndex = errors.indexOf('username: already exists');
-            const emailErrorsIndex = errors.indexOf('email: already exists');
+            const userExistsErrorIndex = errors.indexOf('username: already exists');
+            const emailExistsErrorIndex = errors.indexOf('email: already exists');
+            const emailValidErrorIndex = errors.indexOf('email: must be a valid email');
             const passwordErrorsIndex = errors.indexOf('password: must be 8 or more characters');
-            setUserErrorMessage((userErrorsIndex > -1) ? 'Username already exists' : ' ');
-            setEmailErrorMessage((emailErrorsIndex > -1) ? 'Email already exists' : ' ');
+            setUserErrorMessage((userExistsErrorIndex > -1) ? 'Username already exists' : ' ');
+            if (emailExistsErrorIndex > -1) {
+                setEmailErrorMessage((emailExistsErrorIndex > -1) ? 'Email already exists' : ' ');
+            }
+            else if (emailValidErrorIndex > -1) {
+                setEmailErrorMessage((emailValidErrorIndex > -1) ? 'Must be a valid email' : ' ');
+            }
+
             setPasswordErrorMessage((passwordErrorsIndex > -1) ? 'password must be 8 or more characters' : ' ');
         }
         if (res.ok) {

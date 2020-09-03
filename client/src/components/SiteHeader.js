@@ -60,7 +60,7 @@ export default () => {
                         asauna
                     {/* </Typography> */}
                 </Link>
-                <Link variant="button" color="textPrimary" href="" className={classes.link}>
+                {/* <Link variant="button" color="textPrimary" href="" className={classes.link}>
                     Why Asauna?
             </Link>
                 <Link variant="button" color="textPrimary" href="" className={classes.link}>
@@ -68,10 +68,10 @@ export default () => {
             </Link>
                 <Link variant="button" color="textPrimary" href="/pricing" className={classes.link}>
                     Pricing
-            </Link>
+            </Link> */}
             </nav>
             <nav>
-                <Button className={classes.link}>Contact Sales</Button>
+                {/* <Button className={classes.link}>Contact Sales</Button> */}
                 {
                     !!isLoggedIn ?
                         <>
