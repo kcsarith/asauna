@@ -56,22 +56,10 @@ export default () => {
             <nav>
 
                 <Link variant="button" color="textPrimary" href="/" className={`${classes.logoFont}`}>
-                    {/* <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}> */}
                         asauna
-                    {/* </Typography> */}
                 </Link>
-                {/* <Link variant="button" color="textPrimary" href="" className={classes.link}>
-                    Why Asauna?
-            </Link>
-                <Link variant="button" color="textPrimary" href="" className={classes.link}>
-                    Resources
-            </Link>
-                <Link variant="button" color="textPrimary" href="/pricing" className={classes.link}>
-                    Pricing
-            </Link> */}
             </nav>
             <nav>
-                {/* <Button className={classes.link}>Contact Sales</Button> */}
                 {
                     !!isLoggedIn ?
                         <>
