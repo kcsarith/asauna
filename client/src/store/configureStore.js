@@ -3,9 +3,11 @@ import thunk from 'redux-thunk';
 
 import auth from './auth'
 import signup from './signup'
+import task from './task'
 const rootReducer = combineReducers({
   auth,
-  signup
+  signup,
+  task
 });
 
 let storeEnhancer;

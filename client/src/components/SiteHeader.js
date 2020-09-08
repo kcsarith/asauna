@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-
+import { useHistory } from 'react-router-dom';
 
 import { CssBaseline, Button, Link, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,11 +43,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
     const classes = useStyles();
-
+    const history = useHistory();
     const isLoggedIn = useSelector(state => state.auth.id)
     const dispatch = useDispatch();
     const handleClick = async function () {
-        dispatch(login('demo@example.com', 'password'))
+        dispatch(login('demo@example.com', 'password'));
+        history.push('/workspace')
     }
 
     return (
@@ -56,7 +57,7 @@ export default () => {
             <nav>
 
                 <Link variant="button" color="textPrimary" href="/" className={`${classes.logoFont}`}>
-                        asauna
+                    asauna
                 </Link>
             </nav>
             <nav>
