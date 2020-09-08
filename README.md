@@ -1,45 +1,21 @@
-# Solo React Project
+# Asauna
+View the app on this page
 
 https://notasana.herokuapp.com/
-This is the backend for the Solo React project.
 
-## Getting started
+# Getting started
+## Logging in
+Ways of logging in
+1. Users can sign up by clicking on the "Try for Free" button.
+2. Log in as an existing user by clicking "Login"
+3. Log in using the Demo user.
 
-1. Clone this repository
-2. Install dependencies (`npm install`)
-3. Create a **.env** file based on the example with proper settings for your
-   development environment
-4. Setup your PostgreSQL user, password and database and make sure it matches your **.env** file with CREATEDB privileges
+## Going to the App
+After logging in, you may proceed to the app by clicking on "Go to Asana"
 
-5. Run
-   * `npm run db:create`
-   * `npm run db:migrate`
-   * `npm run db:seed:all`
-   * `npm start`
+# Exploring the app
+The drawers on the left pane can open and close.
+1. One will take to the tasks which shows tasks that are due within a week.
+2. The other tab will show all tasks
 
-## Deploy to Heroku
-
-1. Create a new project
-2. Under Resources click "Find more add-ons" and add the add on called "Heroku Postgres"
-3. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
-4. Run `$ heroku login`
-5. Add heroku as a remote to this git repo `$ heroku git:remote -a <project_name>`
-6. Push the project to heroku `$ git push heroku master`
-7. Connect to the heroku shell and prepare your database
-
-```bash
-    $ heroku run bash
-    $ sequelize-cli db:migrate
-    $ sequelize-cli db:seed:all
-```
-(You can interact with your database this way as youd like, but beware that `db:drop` should not be run in the heroku environment)
-
-8. Add environment variables on the heroku environment using the Heroku dashboard. (Setting Heroku Config Vars)[https://devcenter.heroku.com/articles/config-vars]
-
-9. profit
-
-
-# Material UI
-
-* theme color creator
-* https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=0288D1
+This is currently unfinished, as there are no functionality in this app.
