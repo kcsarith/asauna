@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 
 import Homepage from './Homepage';
 import SignupForm from '../components/SignupForm';
-import Pricing from './Pricing';
 import WorkspaceHome from './WorkspaceHome'
 import WorkspaceMyTasks from './WorkspaceMyTasks'
 

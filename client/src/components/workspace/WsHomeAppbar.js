@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Menu, MenuItem, Grid, Button, IconButton, Typography, Link } from '@material-ui/core';
+import { Avatar, Menu, MenuItem, Grid, Button, Typography } from '@material-ui/core';
 
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'

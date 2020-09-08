@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
@@ -86,8 +86,6 @@ export default function WorkspaceHome() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
-    const authInfo = useSelector(state => state.auth)
-
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -123,13 +121,6 @@ export default function WorkspaceHome() {
                     </ListItem>
                 </List>
                 <Divider className={classes.lighten} />
-                <List>
-
-                    <ListItem href="/workspace/my-tasks" button key='Home'>
-                        <ListItemIcon><HomeOutlinedIcon className={classes.icon} /></ListItemIcon>
-                        <ListItemText primary="Project 1" />
-                    </ListItem>
-                </List>
             </Drawer>
 
             <main
@@ -165,18 +156,18 @@ export default function WorkspaceHome() {
                         alignItems="center"
                         spacing={5}
                     >
-                        <Grid item sm={6} align="left">Tasks Due Soon</Grid>
-                        <Grid item sm={6} align="right">See all my tasks</Grid>
+                        <Grid item sm={6} align="left"><h2>Tasks Due Soon</h2></Grid>
+                        <Grid item sm={6} align="right"><h2>See all my tasks</h2></Grid>
                         <Divider />
 
                         <Grid item sm={12} align="center">No tasks due in the next five days</Grid>
                         <Divider />
 
-                        <Grid item sm={12} align="left">Recent Projects</Grid>
+                        <Grid item sm={12} align="left"><h2>Recent Projects</h2></Grid>
                         <Divider />
                     </Grid>
                 </Container>
             </main>
-        </div>
+        </div >
     );
 }

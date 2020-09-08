@@ -25,32 +25,37 @@ const useStyles = makeStyles((theme) => ({
     checkComplete: {
         backgroundColor: '#DD0000 !important',
         color: 'green !important'
-    }
+    },
 
+    whiteBg: {
+        backgroundColor: '#FFFFFF'
+    },
+    descriptionTextArea: {
+        minWidth: '400px',
+        minHeight: '80px'
+    },
 }));
 
 export default function WsTaskCreationEdit() {
     const classes = useStyles();
     return (
-        <Grid item sm={5}>
-            <Grid
-                container
-                direction="row"
-                justify="space-between"
-                spacing={3, 3}
-                className={classes.whiteBg} >
-                <Grid item sm={6} align="left"><Button variant="contained" color="primary">Mark Complete</Button></Grid>
-                <Grid item sm={6} align="right"><Button color="primary"><CloseIcon /></Button></Grid>
-                <Grid item sm={12} align="left"><TextField fullWidth variant="outlined" defaultValue="Hello world" /></Grid>
-                <Grid item sm={3} align="left">Assignee</Grid>
-                <Grid item sm={9} align="left">Avatar</Grid>
-                <Grid item sm={3} align="left">Due date</Grid>
-                <Grid item sm={9} align="left">09/20/2020</Grid>
-                <Grid item sm={3} align="left">Projects</Grid>
-                <Grid item sm={9} align="left">Project 1</Grid>
-                <Grid item sm={3} align="left">Description</Grid>
-                <Grid item sm={9} align="left"><textarea className={classes.descriptionTextArea} placeholder="Description" /></Grid>
-            </Grid>
+        <Grid
+            container
+            direction="row"
+            justify="space-between"
+            spacing={3, 3}
+            className={classes.whiteBg} >
+            <Grid item sm={6} align="left"><Button variant="contained" color="primary">Mark Complete</Button></Grid>
+            <Grid item sm={6} align="right"><Button color="primary"><CloseIcon /></Button></Grid>
+            <Grid item sm={12} align="left"><TextField fullWidth variant="outlined" defaultValue="Hello world" /></Grid>
+            <Grid item sm={3} align="left">Assignee</Grid>
+            <Grid item sm={9} align="left">Avatar</Grid>
+            <Grid item sm={3} align="left">Due date</Grid>
+            <Grid item sm={9} align="left">09/20/2020</Grid>
+            <Grid item sm={3} align="left">Projects</Grid>
+            <Grid item sm={9} align="left">Project 1</Grid>
+            <Grid item sm={3} align="left">Description</Grid>
+            <Grid item sm={9} align="left"><textarea className={classes.descriptionTextArea} placeholder="Description" /></Grid>
         </Grid>
     )
 }

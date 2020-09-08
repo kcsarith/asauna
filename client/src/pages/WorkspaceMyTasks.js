@@ -1,25 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, Router, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
 
+import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, Button, AppBar, Toolbar, List, Grid, Divider, IconButton, ListItem, TextField, Container } from '@material-ui/core';
+import { Drawer, Avatar, Button, AppBar, Toolbar, List, Grid, Divider, IconButton, ListItem, TextField } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import CloseIcon from '@material-ui/icons/Close';
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 
 import WsMyTasksAppbar from '../components/workspace/WsMyTasksAppbar'
-import WsTaskCreationEdit from '../components/workspace/WsTaskCreationEdit'
-
-import { getAllTasks, setCurrentTask } from '../store/task'
+import { getAllTasks } from '../store/task'
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
@@ -127,22 +125,21 @@ export default function WorkspaceMyTasks() {
     const authInfo = useSelector(state => state.auth)
     const taskInfo = useSelector(state => state.task)
     const dispatch = useDispatch();
+
+
+    const [taskTitle, setTaskTitle] = useState('');
+    const [taskDescription, setTaskDescription] = useState('');
+
     const handleDrawerOpen = () => {
         setOpen(true);
-        console.log(taskInfo.length)
     };
     const handleDrawerClose = () => {
         setOpen(false);
     };
 
     const handleGetAllTasks = async () => {
-        const res = await dispatch(getAllTasks());
+        await dispatch(getAllTasks());
     }
-
-    const handleGetCurrentTask = async (id) => {
-        const res = await dispatch(setCurrentTask(id));
-    }
-
 
     return (
         <div className={classes.root}>
@@ -171,13 +168,6 @@ export default function WorkspaceMyTasks() {
                     </ListItem>
                 </List>
                 <Divider className={classes.lighten} />
-                <List>
-
-                    <ListItem button key='Home'>
-                        <ListItemIcon><HomeOutlinedIcon className={classes.icon} /></ListItemIcon>
-                        <ListItemText primary="Project 1" />
-                    </ListItem>
-                </List>
             </Drawer>
 
             <main
@@ -227,16 +217,41 @@ export default function WorkspaceMyTasks() {
                             <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                             <Grid item sm={6} align="left"><h2>Recently Assigned</h2></Grid>
                             <Grid item sm={6} align="right"><h2>Due Date</h2></Grid>
-                            {taskInfo.length > 0 && taskInfo.map((task) =>
-                                <React.Fragment key={task.id} >
-                                    <Grid item sm={6} align="left" button="true" component={Link} to={`/workspace/my-tasks/${task.id}`}  ><CheckCircleOutlineIcon color={(task.status === 'Incomplete') ? "secondary" : "primary"} />{task.name}</Grid>
-                                    <Grid item sm={6} align="right" button="true" component={Link} to={`/workspace/my-tasks/${task.id}`}  >{task.dueDate}</Grid>
-                                    <Grid item sm={12}><Divider className={classes.darken} /></Grid>
+                            {taskInfo.length > 0 && taskInfo.map((task, index) =>
+                                <React.Fragment key={index} >
+                                    <Grid item sm={9} component={TextField} fullWidth value={task.name} onClick={() => setTaskTitle('asfsdf')} align="left" ><CheckCircleOutlineIcon color={(task.status === 'Incomplete') ? "secondary" : "primary"} />{task.name}</Grid>
+                                    <Grid item sm={3} align="right">{task.dueDate}</Grid>
+
                                 </React.Fragment>
                             )}
                         </Grid>
                     </Grid>
                     {/* THIS IS THE FORM! */}
+
+                    <Grid item sm={5}>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            spacing={3, 3}
+                            className={classes.whiteBg} >
+                            <Grid item sm={6} align="left"><Button variant="contained" color="primary">Mark Complete</Button></Grid>
+                            <Grid item sm={6} align="right"><Button color="primary"><CloseIcon /></Button></Grid>
+                            <Grid item sm={12} align="left"><TextField fullWidth variant="outlined" onChange={(e) => setTaskTitle(e.target.value)} /></Grid>
+                            <Grid item sm={3} align="left">Assignee</Grid>
+                            <Grid item sm={9} align="left"><Avatar>
+                                {authInfo.username && <>
+                                    {authInfo.username[0]}
+                                    {authInfo.username[1]}</>}
+                            </Avatar></Grid>
+                            <Grid item sm={3} align="left">Due date</Grid>
+                            <Grid item sm={9} align="left">09/20/2020</Grid>
+                            <Grid item sm={3} align="left">Projects</Grid>
+                            <Grid item sm={9} align="left">Project 1</Grid>
+                            <Grid item sm={3} align="left">Description</Grid>
+                            <Grid item sm={9} align="left"><textarea onChange={(e) => setTaskDescription(e.target.value)} className={classes.descriptionTextArea} placeholder="Description" /> </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
             </main>
         </div>
