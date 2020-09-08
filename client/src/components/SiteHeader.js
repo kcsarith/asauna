@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-
+import { useHistory } from 'react-router-dom';
 
 import { CssBaseline, Button, Link, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,11 +43,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
     const classes = useStyles();
-
+    const history = useHistory();
     const isLoggedIn = useSelector(state => state.auth.id)
     const dispatch = useDispatch();
     const handleClick = async function () {
-        dispatch(login('demo@example.com', 'password'))
+        dispatch(login('demo@example.com', 'password'));
+        history.push('/workspace')
     }
 
     return (
@@ -56,22 +57,10 @@ export default () => {
             <nav>
 
                 <Link variant="button" color="textPrimary" href="/" className={`${classes.logoFont}`}>
-                    {/* <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}> */}
-                        asauna
-                    {/* </Typography> */}
+                    asauna
                 </Link>
-                {/* <Link variant="button" color="textPrimary" href="" className={classes.link}>
-                    Why Asauna?
-            </Link>
-                <Link variant="button" color="textPrimary" href="" className={classes.link}>
-                    Resources
-            </Link>
-                <Link variant="button" color="textPrimary" href="/pricing" className={classes.link}>
-                    Pricing
-            </Link> */}
             </nav>
             <nav>
-                {/* <Button className={classes.link}>Contact Sales</Button> */}
                 {
                     !!isLoggedIn ?
                         <>
