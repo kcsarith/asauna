@@ -4,7 +4,13 @@ View the app on this page
 https://notasana.herokuapp.com/
 
 # Features List
-* As an individual, I want to signup and login to keep my page personal and private who those who don't need to see it. I also want to be able to make personalized comments so I can ask questions or make things clearer for someone who has a question.
+## Old Features
+* As an individual, I want to signup and login to keep my page personal and private who those who don't need to see it.
+
+* As a viewer, I want to be able to see all the tasks created as well as view individual ones.
+
+## New Features
+* As a member of a team, I want to be able to make personalized comments so I can ask questions or make things clearer for someone who has a question.
 
 * As a planner who wants to keep track of things to do, I want to create tasks by setting a description and due date and update the status of ones I own so that I can see what I need to do, and how I should prioritize my to do list.  I also want to have a calander to know when a deadline is coming up.
 
