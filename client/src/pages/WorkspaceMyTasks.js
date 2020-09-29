@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom';
+
+import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 
 
@@ -122,6 +123,8 @@ export default function WorkspaceMyTasks() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
+    const { workspaceId } = useParams()
+
     const authInfo = useSelector(state => state.auth)
     const taskInfo = useSelector(state => state.task)
     const dispatch = useDispatch();
@@ -136,6 +139,19 @@ export default function WorkspaceMyTasks() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    useEffect(async () => {
+        // This gets called after every render, by default
+        // (the first one, and every one after that)
+        await dispatch(getAllTasks());
+
+        // If you want to implement componentWillUnmount,
+        // return a function from here, and React will call
+        // it prior to unmounting.
+        return () => console.log('unmounting...');
+    }, [workspaceId
+        /* dependencies to watch = leave blank to run once or you will get a stack overflow */]);
+
 
     const handleGetAllTasks = async () => {
         await dispatch(getAllTasks());
@@ -158,11 +174,11 @@ export default function WorkspaceMyTasks() {
                     </IconButton>
                 </div>
                 <List>
-                    <ListItem button key='Home' component={Link} to="/workspace">
+                    <ListItem button key='Home' component={Link} to={`/workspace/${workspaceId}`}>
                         <ListItemIcon><HomeOutlinedIcon className={classes.icon} /></ListItemIcon>
                         <ListItemText primary="Home" />
                     </ListItem>
-                    <ListItem button key='My Tasks' onClick={handleGetAllTasks} component={Link} to="/workspace/my-tasks" >
+                    <ListItem button key='My Tasks' onClick={handleGetAllTasks} component={Link} to={`/workspace/${workspaceId}/my-tasks`} >
                         <ListItemIcon><AssignmentTurnedInOutlinedIcon className={classes.icon} /></ListItemIcon>
                         <ListItemText primary="My Tasks" />
                     </ListItem>

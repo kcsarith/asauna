@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     Workspace.hasMany(models.Project, { foreignKey: 'workspaceId' });
 
     Workspace.belongsTo(models.User, { foreignKey: 'ownerId' });
-
   };
   return Workspace;
 };

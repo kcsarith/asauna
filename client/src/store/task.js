@@ -2,7 +2,9 @@
 import Cookies from 'js-cookie'
 
 export const SET_ALL_TASKS = 'SET_ALL_TASKS';
-export const SET_CURRENT_TASK = 'SET_ALL_TASKS';
+export const SET_CURRENT_TASK = 'SET_CURRENT_TASK';
+export const CREATE_TASK = 'CREATE_TASK';
+export const DELETE_TASK = 'DELETE_TASK';
 
 export const setAllTasks = (tasks) => {
     return {
@@ -15,6 +17,13 @@ export const setCurrentTask = (currentTask) => {
     return {
         type: SET_CURRENT_TASK,
         currentTask
+    }
+}
+
+export const createTask = (task) => {
+    return {
+        type: CREATE_TASK,
+        task
     }
 }
 
@@ -45,6 +54,26 @@ export const getOneTask = (id) => {
         const task = res.data.task;
         if (res.ok) {
             dispatch(setAllTasks(task));
+        }
+        return res;
+    }
+}
+
+export const createNewTask = (ownerId, workspaceId) => {
+
+    return async dispatch => {
+        const res = await fetch('/api/tasks', {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
+            },
+            body: JSON.stringify({ ownerId, workspaceId })
+        });
+        res.data = await res.json();
+        const task = res.data.Task;
+        if (res.ok) {
+            dispatch(createTask(task));
         }
         return res;
     }

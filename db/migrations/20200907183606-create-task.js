@@ -33,6 +33,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 'Users' }
       },
+      assignedToId: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: { model: 'Users' },
+        defaultValue: null
+      },
       projectId: {
         allowNull: false,
         type: Sequelize.INTEGER,

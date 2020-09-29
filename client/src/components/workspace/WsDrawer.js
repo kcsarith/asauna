@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom';
+import { Link, Route, Switch, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 
 
@@ -15,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 
-import WsHomeAppbar from '../components/workspace/WsHomeAppbar'
+import WsHomeAppbar from './WsHomeAppbar'
 const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
@@ -146,7 +146,9 @@ export default function WorkspaceHome() {
                         >
                             <MenuIcon style={{ color: "#444444" }} />
                         </IconButton>
-                        <WsHomeAppbar />
+                        <Switch>
+                            <Route />
+                        </Switch>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.drawerHeader} />

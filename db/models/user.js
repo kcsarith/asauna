@@ -74,8 +74,12 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Workspace, { foreignKey: 'ownerId' });
     User.hasMany(models.Project, { foreignKey: 'ownerId' });
     User.hasMany(models.Task, { foreignKey: 'ownerId' });
+    User.hasMany(models.Task, { foreignKey: 'assignedToId' });
     User.hasMany(models.Comment, { foreignKey: 'ownerId' });
     User.hasMany(models.Progress, { foreignKey: 'ownerId' });
+    User.hasMany(models.WorkspaceAdmin, { foreignKey: 'userId' });
+    User.hasMany(models.WorkspaceMember, { foreignKey: 'userId' });
+    User.hasMany(models.TaskFollower, { foreignKey: 'userId' });
   };
 
   User.prototype.toSafeObject = function () {
