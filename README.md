@@ -1,45 +1,36 @@
-# Solo React Project
+# Asauna
+View the app on this page
 
 https://notasana.herokuapp.com/
-This is the backend for the Solo React project.
 
-## Getting started
+# Features List
+## Old Features
+* As an individual, I want to signup and login to keep my page personal and private who those who don't need to see it.
 
-1. Clone this repository
-2. Install dependencies (`npm install`)
-3. Create a **.env** file based on the example with proper settings for your
-   development environment
-4. Setup your PostgreSQL user, password and database and make sure it matches your **.env** file with CREATEDB privileges
+* As a viewer, I want to be able to see all the tasks created as well as view individual ones.
 
-5. Run
-   * `npm run db:create`
-   * `npm run db:migrate`
-   * `npm run db:seed:all`
-   * `npm start`
+## New Features
+* As a member of a team, I want to be able to make personalized comments so I can ask questions or make things clearer for someone who has a question.
 
-## Deploy to Heroku
+* As a planner who wants to keep track of things to do, I want to create tasks by setting a description and due date and update the status of ones I own so that I can see what I need to do, and how I should prioritize my to do list.  I also want to have a calander to know when a deadline is coming up.
 
-1. Create a new project
-2. Under Resources click "Find more add-ons" and add the add on called "Heroku Postgres"
-3. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
-4. Run `$ heroku login`
-5. Add heroku as a remote to this git repo `$ heroku git:remote -a <project_name>`
-6. Push the project to heroku `$ git push heroku master`
-7. Connect to the heroku shell and prepare your database
+* As an organizer, I want to structure a large task, into many smaller tasks, and also have the ability to set the status of it so I know how much progress I am making in this large task.
 
-```bash
-    $ heroku run bash
-    $ sequelize-cli db:migrate
-    $ sequelize-cli db:seed:all
-```
-(You can interact with your database this way as youd like, but beware that `db:drop` should not be run in the heroku environment)
+* As a leader who has a team, I want to know how progress is going around in the organization as well as assigning them different tasks.
 
-8. Add environment variables on the heroku environment using the Heroku dashboard. (Setting Heroku Config Vars)[https://devcenter.heroku.com/articles/config-vars]
+# Getting started
+## Logging in
+Ways of logging in
+1. Users can sign up by clicking on the "Try for Free" button.
+2. Log in as an existing user by clicking "Login"
+3. Log in using the Demo user.
 
-9. profit
+## Going to the App
+After logging in, you may proceed to the app by clicking on "Go to Asana"
 
+# Exploring the app
+The drawers on the left pane can open and close.
+1. One will take to the tasks which shows tasks that are due within a week.
+2. The other tab will show all tasks
 
-# Material UI
-
-* theme color creator
-* https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=0288D1
+This is currently unfinished, as there are no functionality in this app.
