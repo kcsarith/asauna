@@ -49,6 +49,11 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'Low'
       },
+      listOrder: {
+        allowNull: false,
+        autoIncrement: true,
+        type: Sequelize.INTEGER,
+      },
       parentTaskId: {
         type: Sequelize.INTEGER,
         references: { model: 'Tasks' }

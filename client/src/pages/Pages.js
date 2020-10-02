@@ -15,14 +15,10 @@ export default function Pages() {
             <Switch>
                 <Route exact path="/" render={() => <><SiteHeader /><Homepage /></>} />
                 <Route exact path="/create-account" component={SignupForm} />
-                <Route exact path="/workspace" render={() =>
-                    <>
-                        <WsDrawer />
-                        <Route path="/workspace/:workspaceId" component={WorkspaceMyTasks} />
-                    </>} />
-                <Route exact path="/workspace/:workspaceId/my-tasks" component={WorkspaceMyTasks} />
-                <Route exact path="/workspace/:workspaceId/my-tasks/:id" component={WorkspaceMyTasks} />
-                <Route exact path="*" render={() =>
+                <Route path="/workspace/:workspaceId" component={WsDrawer} />
+                <Route path="/workspace" component={WsDrawer} />
+                {/* <Route exact path="/workspace/:workspaceId/my-tasks/:id" component={WorkspaceMyTasks} /> */}
+                <Route path="*" render={() =>
                     <>
                         <SiteHeader /><NotFound />
                     </>} />

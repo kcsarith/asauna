@@ -73,8 +73,8 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function (models) {
     User.hasMany(models.Workspace, { foreignKey: 'ownerId' });
     User.hasMany(models.Project, { foreignKey: 'ownerId' });
-    User.hasMany(models.Task, { foreignKey: 'ownerId' });
-    User.hasMany(models.Task, { foreignKey: 'assignedToId' });
+    User.hasMany(models.Task, { foreignKey: 'ownerId', as: 'Assigner' });
+    User.hasMany(models.Task, { foreignKey: 'assignedToId', as: 'Assignee' });
     User.hasMany(models.Comment, { foreignKey: 'ownerId' });
     User.hasMany(models.Progress, { foreignKey: 'ownerId' });
     User.hasMany(models.WorkspaceAdmin, { foreignKey: 'userId' });

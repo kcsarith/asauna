@@ -27,7 +27,7 @@ function App() {
     <>
       <CssBaseline />
       <BrowserRouter>
-        <Pages />
+          <Pages />
       </BrowserRouter>
     </>
   );

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Task, User, TaskFollower } = require('../../db/models');
+const { Task, User, TaskFollower, Project } = require('../../db/models');
 const { Op } = require('sequelize');
 
 const asyncHandler = require('express-async-handler');
@@ -17,7 +17,10 @@ router.post('/', asyncHandler(async (req, res) => {
 //	read all tasks
 router.get('/', asyncHandler(async (req, res) => {
   const tasks = await Task.findAll({
-    include: [{ model: User }],
+    include: [{ model: User, as: 'Assigner' }, { model: User, as: 'Assignee' }, { model: Project }],
+    order: [
+      ['listOrder', 'DESC'],
+    ],
   });
   return res.json({ tasks });
 }))
@@ -26,7 +29,7 @@ router.get('/', asyncHandler(async (req, res) => {
 router.get('/:taskId(\\d+)', asyncHandler(async (req, res) => {
   const taskId = parseInt(req.params.taskId, 10);
   const task = await Task.findByPk(taskId, {
-    include: [{ model: User }],
+    include: [{ model: User, as: 'Assigner' }, { model: User, as: 'Assignee' }, { model: Project }],
   });
   res.json({ task });
 }))

@@ -15,6 +15,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 
+import WorkspaceMyTasks from '../../pages/WorkspaceMyTasks'
+import WorkspaceHome from '../../pages/WorkspaceHome'
 import WsHomeAppbar from './WsHomeAppbar'
 const drawerWidth = 180;
 
@@ -82,12 +84,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#555555'
     }
 }));
-export default function WorkspaceHome() {
+export default function WsDrawer() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
-    const { workspaceId } = useParams()
-    console.log(workspaceId);
+    const { workspaceId } = useParams();
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -146,31 +147,11 @@ export default function WorkspaceHome() {
                         >
                             <MenuIcon style={{ color: "#444444" }} />
                         </IconButton>
-                        <Switch>
-                            <Route />
-                        </Switch>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.drawerHeader} />
-                <Container maxWidth="sm">
-                    <Grid
-                        container
-                        direction="row"
-                        justify="space-between"
-                        alignItems="center"
-                        spacing={5}
-                    >
-                        <Grid item sm={6} align="left"><h2>Tasks Due Soon</h2></Grid>
-                        <Grid item sm={6} align="right"><h2>See all my tasks</h2></Grid>
-                        <Divider />
-
-                        <Grid item sm={12} align="center">No tasks due in the next five days</Grid>
-                        <Divider />
-
-                        <Grid item sm={12} align="left"><h2>Recent Projects</h2></Grid>
-                        <Divider />
-                    </Grid>
-                </Container>
+                <Route exact path="/workspace/:workspaceId" component={WorkspaceHome} />
+                <Route path="/workspace/:workspaceId/my-tasks" component={WorkspaceMyTasks} />
             </main>
         </div >
     );

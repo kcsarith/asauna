@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     assignedToId: DataTypes.INTEGER,
     projectId: DataTypes.INTEGER,
     priority: DataTypes.STRING,
+    listOrder: DataTypes.INTEGER,
     parentTaskId: DataTypes.INTEGER,
   }, {});
   Task.associate = function (models) {
@@ -17,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     Task.hasMany(models.Task, { foreignKey: 'parentTaskId' });
     Task.hasMany(models.Comment, { foreignKey: 'taskId' });
 
-    Task.belongsTo(models.User, { foreignKey: 'ownerId' });
-    Task.belongsTo(models.User, { foreignKey: 'assignedToId' });
+    Task.belongsTo(models.User, { foreignKey: 'ownerId', as: 'Assigner' });
+    Task.belongsTo(models.User, { foreignKey: 'assignedToId', as: 'Assignee' });
     Task.belongsTo(models.Project, { foreignKey: 'projectId' });
     Task.belongsTo(models.Task, { foreignKey: 'parentTaskId' });
   };
