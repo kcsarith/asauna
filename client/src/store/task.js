@@ -43,6 +43,25 @@ export const getAllTasks = () => {
     }
 }
 
+export const swapMyTaskListOrders = (sourceTaskListOrder, destinationTaskListOrder) => {
+    return async () => {
+        const res = await fetch(`/api/tasks/swap_list-orders`, {
+            method: "patch",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
+            },
+            body: JSON.stringify({ sourceTaskListOrder, destinationTaskListOrder })
+        });
+        const data = res.data = await res.json();
+        console.log(data);
+        if (res.ok) {
+            console.log('Successfully patched!');
+        }
+        return res;
+    }
+}
+
 export const getOneTask = (id) => {
     return async dispatch => {
         const res = await fetch(`/api/tasks/${id}`, {

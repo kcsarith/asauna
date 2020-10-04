@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Task.hasMany(models.Task, { foreignKey: 'parentTaskId' });
     Task.hasMany(models.Comment, { foreignKey: 'taskId' });
+    Task.hasMany(models.TodoColumn, { foreignKey: 'taskId' });
+    Task.hasMany(models.InProgressColumn, { foreignKey: 'taskId' });
+    Task.hasMany(models.DoneColumn, { foreignKey: 'taskId' });
 
     Task.belongsTo(models.User, { foreignKey: 'ownerId', as: 'Assigner' });
     Task.belongsTo(models.User, { foreignKey: 'assignedToId', as: 'Assignee' });

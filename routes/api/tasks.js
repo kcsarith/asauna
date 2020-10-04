@@ -34,6 +34,31 @@ router.get('/:taskId(\\d+)', asyncHandler(async (req, res) => {
   res.json({ task });
 }))
 
+// Patch List Order
+router.patch('/swap_list-orders)', asyncHandler(async (req, res) => {
+  const { sourceTaskListOrder, destinationTaskListOrder } = req.body
+  Task.findByPk(sourceTaskListOrder)
+    .on('success', function (sourceTask) {
+      // Check if record exists in db
+      if (sourceTask) {
+        sourceTask.update({
+          listOrder: destinationTaskListOrder
+        })
+          .success(function () { console.log('Swapped Task 1') })
+      }
+    });
+  Task.findByPk(destinationTaskListOrder)
+    .on('success', function (destinationTask) {
+      // Check if record exists in db
+      if (destinationTask) {
+        destinationTask.update({
+          listOrder: sourceTaskListOrder
+        })
+          .success(function () { console.log('Swapped Task 2') })
+      }
+    })
+}))
+
 // UPDATE
 router.put('/edit/:taskId(\\d+)', asyncHandler(async (req, res, next) => {
   const taskId = parseInt(req.params.taskId, 10);
