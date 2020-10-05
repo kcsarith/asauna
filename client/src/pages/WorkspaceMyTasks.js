@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Route, useParams, useHistory } from 'react-router-dom';
 
-import _ from 'lodash'
-
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, Divider, TextField, InputBase } from '@material-ui/core';
+import { Button, Grid, Divider, InputBase, Slide } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import AppsIcon from '@material-ui/icons/Apps';
 
-import { getAllTasks, swapMyTaskListOrders } from '../store/task'
+import { getAllTasks, patchTaskListOrder, patchTaskName, createNewTask } from '../store/task'
 
 import WsTaskCreationEdit from '../components/workspace/WsTaskCreationEdit';
 
@@ -18,12 +17,6 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        minHeight: '100vh',
-        marginBottom: 0,
-        backgroundColor: 'black'
-    },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
@@ -43,23 +36,6 @@ const useStyles = makeStyles((theme) => ({
     },
     hide: {
         display: 'none',
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-        backgroundColor: '#222222',
-        color: 'white'
-    },
-    drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
-        ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
     },
     icon: {
         color: '#DDDDDD'
@@ -86,8 +62,14 @@ const useStyles = makeStyles((theme) => ({
     darken: {
         backgroundColor: '#000000'
     },
+    darkenPads: {
+        backgroundColor: '#FFFFFF',
+        paddingBottom: '200px'
+    },
     whiteBg: {
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
+        paddingLeft: '10px',
+        paddingRight: '10px',
     },
     footer: {
         padding: theme.spacing(3, 2),
@@ -121,7 +103,8 @@ export default function WorkspaceMyTasks() {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const [currentTaskId, setCurrentTaskId] = useState();
+    const [currentTask, setCurrentTask] = useState();
+    const [currentTaskLo, setCurrentTaskLo] = useState();
     const [myTasks, setMyTasks] = useState([]);
     // useEffect(async () => {
     //     // This gets called after every render, by default
@@ -142,26 +125,70 @@ export default function WorkspaceMyTasks() {
             // You can await here
             const res = await dispatch(getAllTasks());
             console.log(res.data.tasks);
-            setMyTasks(res.data.tasks);
+            await setMyTasks(res.data.tasks);
         }
         fetchData();
     }, [workspaceId]); // Or [] if effect doesn't need props or state
 
     const handleMyTaskClick = e => {
+        const myTasksLength = myTasks.length;
         const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10);
+        const sideBarTaskLo = myTasksLength - parseInt(e.currentTarget.className.split('my-task-lo_')[1].split(' ')[0], 10);
+        setCurrentTask(myTasks[sideBarTaskLo]);
+        setCurrentTaskLo(sideBarTaskLo);
         if (sideBarTaskId > 0) {
             history.push(`/workspace/${workspaceId}/my-tasks/${sideBarTaskId}`);
         }
     }
     const handleMyTaskOnChange = e => {
         const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
-        setCurrentTaskId(sideBarTaskId);
+
+        async function fetchData() {
+            // You can await here
+            const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
+            // taskInfo[sideBarTaskId].name = e.target.value
+            // console.log(res);
+        }
+        fetchData();
+    }
+
+    const handleMyTaskOnBlur = e => {
+        const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
+        console.log(taskInfo[sideBarTaskId]);
+        async function fetchData() {
+            // You can await here
+            // const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
+            const oldTask = myTasks[currentTaskLo];
+            const myTasksCopy = [...myTasks];
+            oldTask.name = e.target.value;
+            myTasksCopy.splice(oldTask.listOrder, 1, oldTask);
+            console.log(myTasksCopy)
+
+            history.push(`/workspace/${workspaceId}/my-tasks/${sideBarTaskId}`);
+        }
+        fetchData();
+
+    }
+    const handleCreateNewTask = e => {
+        const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
+        console.log(taskInfo[sideBarTaskId]);
+        async function fetchData() {
+            // You can await here
+            // const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
+
+            const res = await dispatch(createNewTask('untitiled', 'Hmmm', 1, 1));
+            console.log(res);
+            setCurrentTaskLo(res.data.task.listOrder)
+            history.push(`/workspace/${workspaceId}/my-tasks/${res.data.task.id}`);
+        }
+        fetchData();
+
     }
 
     const handleOnDragEnd = result => {
         //TODO, SWAP LIST ORDERS
         console.log(result)
-        const { destination, source } = result;
+        const { destination, source, draggableId } = result;
         if (!destination) {
             return
         }
@@ -179,11 +206,14 @@ export default function WorkspaceMyTasks() {
             prev.splice(source.index, 1);
             prev.splice(destination.index, 0, sourceTaskCopy);
             return prev;
-
         });
+        const sourceTaskId = sourceTaskCopy.id;
+        const destinationTaskId = destinationTaskCopy.id;
+
         async function fetchData() {
             // You can await here
-            await swapMyTaskListOrders(sourceTaskCopy.listOrder, destinationTaskCopy.listOrder)
+            const res = await dispatch(patchTaskListOrder(sourceTaskId, destinationTaskId));
+            console.log(res);
         }
         fetchData();
     };
@@ -193,8 +223,10 @@ export default function WorkspaceMyTasks() {
             direction="row"
             justify="center"
             alignItems="flex-start"
-            spacing={5}>
-            <Grid item sm={7} >
+            spacing={5}
+            mx={5}
+        >
+            <Grid item sm={6} >
                 <Grid
                     container
                     direction="row"
@@ -202,7 +234,7 @@ export default function WorkspaceMyTasks() {
                     spacing={3, 3}
                     className={classes.whiteBg} >
                     <Grid item sm={12} align="left">
-                        <Button variant="contained" color="primary">+ Add Task</Button>
+                        <Button variant="contained" color="primary" onClick={handleCreateNewTask}>+ Add Task</Button>
                     </Grid>
                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                     <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -210,29 +242,34 @@ export default function WorkspaceMyTasks() {
                         <Grid item sm={6} align="right"><h2>Due Date</h2></Grid>
                         <Droppable droppableId='droppable_my-task'>
                             {(provided) => (
-                                <Grid container direction="row" justify="space-between" spacing={3, 3} className={classes.whiteBg} innerRef={provided.innerRef} {...provided.droppableProps} >
+                                <Grid container direction="row" justify="space-between" spacing={0} className={classes.whiteBg} innerRef={provided.innerRef} {...provided.droppableProps} >
                                     {myTasks.length > 0 && myTasks.map((task, index) =>
                                         <Draggable key={task.id} draggableId={`draggable-task_${task.id}`} index={index}>
                                             {provided => (
                                                 <Grid container {...provided.draggableProps} {...provided.dragHandleProps} innerRef={provided.innerRef}>
                                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
-                                                    <Grid item sm={9} component={InputBase} id={`my-task_${task.listOrder}`} defaultValue={task.name} fullWidth onClick={handleMyTaskClick} onChange={handleMyTaskOnChange} align="left" ><CheckCircleOutlineIcon color={(task.status === 'Incomplete') ? "secondary" : "primary"} />{task.name}</Grid>
-                                                    <Grid item sm={3} align="right">{task.dueDate}</Grid>
+                                                    <Grid item sm={1} component={AppsIcon} />
+                                                    <Grid item sm={1} component={CheckCircleOutlineIcon} color={(task.status === 'Incomplete') ? "secondary" : "primary"} />
+                                                    <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} defaultValue={task.name} fullWidth onClick={handleMyTaskClick} onChange={handleMyTaskOnChange} onBlur={handleMyTaskOnBlur} align="left" >
+                                                        {task.name}
+                                                    </Grid>
+                                                    <Grid item sm={2} align="right">{task.dueDate.slice(0, 10)}</Grid>
                                                 </Grid>
                                             )}
                                         </Draggable>
                                     )}
                                     {provided.placeholder}
+                                    <Grid item sm={12}><Divider className={classes.darken} /></Grid>
+                                    <Grid item sm={12}><Divider className={classes.darkenPads} /></Grid>
                                 </Grid>
                             )}
                         </Droppable>
                     </DragDropContext>
-                    <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                 </Grid>
             </Grid>
             {/* THIS IS THE FORM! */}
-            {Object.keys(taskInfo).length &&
-                <Route path="/workspace/:workspaceId/my-tasks/:taskId" render={() => <WsTaskCreationEdit taskInfo={taskInfo} />} />}
+            {currentTask &&
+                <Route path="/workspace/:workspaceId/my-tasks/:taskId" render={() => <WsTaskCreationEdit currentTaskToEdit={myTasks[currentTaskLo]} />} />}
 
         </Grid>
     );

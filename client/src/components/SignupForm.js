@@ -89,7 +89,7 @@ export default function SignUp() {
             setPasswordErrorMessage((passwordErrorsIndex > -1) ? 'password must be 8 or more characters' : ' ');
         }
         if (res.ok) {
-            history.push("/workspace");
+            history.push("/workspace/1");
         }
     }
     return (

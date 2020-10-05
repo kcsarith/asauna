@@ -48,7 +48,7 @@ export default () => {
     const dispatch = useDispatch();
     const handleClick = async function () {
         dispatch(login('demo@example.com', 'password'));
-        history.push('/workspace')
+        history.push('/workspace/1')
     }
 
     return (
@@ -65,7 +65,7 @@ export default () => {
                     !!isLoggedIn ?
                         <>
                             <LogoutButton />
-                            <Button href="/workspace" variant="contained" color="primary" className={classes.link}>Go to Asauna</Button> </> :
+                            <Button href="/workspace/1" variant="contained" color="primary" className={classes.link}>Go to Asauna</Button> </> :
                         <>
                             <LoginModal />
                             <Button className={classes.link} onClick={handleClick}>Demo User</Button>

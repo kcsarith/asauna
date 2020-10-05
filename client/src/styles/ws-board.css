@@ -11,15 +11,17 @@
 
 .App .column {
     width: 30%;
+    color: white;
 }
 
 .droppable-col {
-    width: 100%;
+    width: 90%;
     background-color: gray;
     padding: 10px 10px 0 10px;
     border-radius: 7px;
     display: flex;
     flex-direction: column;
+    min-height: 50px;
 }
 
 .item {
@@ -32,5 +34,6 @@
 }
 
 .item.dragging {
-    background-color: coral;
+    background-color: white;
+    color: black
 }

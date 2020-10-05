@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { useSelector } from 'react-redux'
-import { Link, Route, Switch, useParams } from 'react-router-dom';
+import { Link, Route, useParams, useHistory, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, List, Grid, Divider, IconButton, ListItem, Container } from '@material-ui/core';
+import { Drawer, AppBar, Toolbar, List, Divider, IconButton, ListItem, Avatar } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -17,12 +16,21 @@ import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedI
 
 import WorkspaceMyTasks from '../../pages/WorkspaceMyTasks'
 import WorkspaceHome from '../../pages/WorkspaceHome'
+import WorkspaceProject from '../../pages/WorkspaceProject'
 import WsHomeAppbar from './WsHomeAppbar'
-const drawerWidth = 180;
+import WsMyTasksAppbar from './WsMyTasksAppbar'
+import WsProjectAppbar from './WsProjectAppbar'
+import { ClassRounded } from '@material-ui/icons';
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-    root: {
+    darkRoot: {
         display: 'flex',
+        backgroundColor: 'black'
+    },
+    whiteRoot: {
+        display: 'flex',
+        backgroundColor: '#FFFFFF'
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -82,11 +90,18 @@ const useStyles = makeStyles((theme) => ({
     },
     lighten: {
         backgroundColor: '#555555'
+    },
+    avatarSm: {
+        height: '24px !important',
+        width: '24px !important',
+        margin: '2px'
     }
 }));
 export default function WsDrawer() {
     const classes = useStyles();
     const theme = useTheme();
+    const history = useHistory();
+    const location = useLocation();
     const [open, setOpen] = React.useState(true);
     const { workspaceId } = useParams();
     const handleDrawerOpen = () => {
@@ -95,10 +110,13 @@ export default function WsDrawer() {
 
     const handleDrawerClose = () => {
         setOpen(false);
+        console.log(location.pathname)
     };
 
     return (
-        <div className={classes.root}>
+        <div className=
+            {location.pathname.includes(`my-tasks`) || location.pathname.includes(`project`) ? classes.darkRoot : classes.whiteRoot}>
+
             <Drawer
                 className={classes.drawer}
                 variant="persistent"
@@ -124,6 +142,17 @@ export default function WsDrawer() {
                     </ListItem>
                 </List>
                 <Divider className={classes.lighten} />
+                <List>
+                    <ListItem >
+                        My Workspace
+                    </ListItem>
+                    <ListItem button component={Link} to={`/workspace/${workspaceId}/my-tasks`}>
+                        <Avatar className={classes.avatarSm} /><Avatar className={classes.avatarSm} /><Avatar className={classes.avatarSm} /> + Invite People
+                    </ListItem>
+                    <ListItem button component={Link} to={`/workspace/${workspaceId}/project`}>
+                        My Project
+                    </ListItem>
+                </List>
             </Drawer>
 
             <main
@@ -147,11 +176,16 @@ export default function WsDrawer() {
                         >
                             <MenuIcon style={{ color: "#444444" }} />
                         </IconButton>
+                        {location.pathname === `/workspace/${workspaceId}` && <WsHomeAppbar />}
+                        {location.pathname.includes(`/workspace/${workspaceId}/my-tasks`) && <WsMyTasksAppbar />}
+                        {location.pathname.includes(`/workspace/${workspaceId}/project`) && <WsProjectAppbar />}
                     </Toolbar>
+
                 </AppBar>
                 <div className={classes.drawerHeader} />
                 <Route exact path="/workspace/:workspaceId" component={WorkspaceHome} />
                 <Route path="/workspace/:workspaceId/my-tasks" component={WorkspaceMyTasks} />
+                <Route path="/workspace/:workspaceId/project" component={WorkspaceProject} />
             </main>
         </div >
     );

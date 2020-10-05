@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, } from 'react';
+import { useDispatch } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 import { v4 } from "uuid";
-import '../../styles/ws-board.css'
+import '../styles/ws-board.css'
 
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { getAllColumnTodos } from '../store/columns-todo'
 const item = {
     id: v4(),
     name: "Clean the house"
@@ -14,7 +18,8 @@ const item2 = {
     name: "Wash the car"
 }
 
-function WsBoard() {
+function WorkspaceProject() {
+    const dispatch = useDispatch();
     const [text, setText] = useState("")
     const [state, setState] = useState({
         "todo": {
@@ -30,6 +35,20 @@ function WsBoard() {
             items: []
         }
     })
+    const { workspaceId } = useParams();
+    useEffect(() => {
+        async function fetchData() {
+            // You can await here
+            const res = await dispatch(getAllColumnTodos());
+            console.log(res.data);
+            await setState(prev => {
+                prev = { ...prev };
+                prev['todo'].items = res.data.todoColumns;
+                return prev
+            });
+        }
+        fetchData();
+    }, [workspaceId]); // Or [] if effect doesn't need props or state
 
     const handleDragEnd = ({ destination, source }) => {
         if (!destination) {
@@ -56,32 +75,9 @@ function WsBoard() {
         })
     }
 
-    const addItem = () => {
-        setState(prev => {
-            return {
-                ...prev,
-                todo: {
-                    title: "Todo",
-                    items: [
-                        {
-                            id: v4(),
-                            name: text
-                        },
-                        ...prev.todo.items
-                    ]
-                }
-            }
-        })
-
-        setText("")
-    }
 
     return (
         <div className="App">
-            <div>
-                <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-                <button onClick={addItem}>Add</button>
-            </div>
             <DragDropContext onDragEnd={handleDragEnd}>
                 {_.map(state, (data, key) => {
                     return (
@@ -97,9 +93,9 @@ function WsBoard() {
                                         >
                                             {data.items.map((el, index) => {
                                                 return (
-                                                    <Draggable key={el.id} index={index} draggableId={el.id}>
+                                                    <Draggable key={el.id} index={index} draggableId={el.id.toString()}>
                                                         {(provided, snapshot) => {
-                                                            console.log(snapshot)
+                                                            console.log(el)
                                                             return (
                                                                 <div
                                                                     className={`item ${snapshot.isDragging && "dragging"}`}
@@ -107,7 +103,7 @@ function WsBoard() {
                                                                     {...provided.draggableProps}
                                                                     {...provided.dragHandleProps}
                                                                 >
-                                                                    {el.name}
+                                                                    {el.id}
                                                                 </div>
                                                             )
                                                         }}
@@ -123,8 +119,11 @@ function WsBoard() {
                     )
                 })}
             </DragDropContext>
-        </div>
+            < div className={"droppable-col"} >
+                <p>The list</p>
+            </div>
+        </div >
     );
 }
 
-export default WsBoard;
+export default WorkspaceProject;

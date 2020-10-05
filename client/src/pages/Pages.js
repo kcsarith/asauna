@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import Homepage from './Homepage';
 import SignupForm from '../components/SignupForm';
 import WsDrawer from '../components/workspace/WsDrawer';
-import WsBoard from '../components/workspace/WsBoard';
+import WsBoard from './WorkspaceProject';
 import WorkspaceHome from './WorkspaceHome'
 import WorkspaceMyTasks from './WorkspaceMyTasks'
 import NotFound from './NotFound';
@@ -19,7 +19,6 @@ export default function Pages() {
                 <Route path="/workspace/:workspaceId" component={WsDrawer} />
                 <Route path="/workspace" component={WsDrawer} />
                 {/* <Route exact path="/workspace/:workspaceId/my-tasks/:id" component={WorkspaceMyTasks} /> */}
-                <Route path="/secret" component={WsBoard} />
                 <Route path="*" render={() =>
                     <>
                         <SiteHeader /><NotFound />

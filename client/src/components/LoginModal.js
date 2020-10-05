@@ -67,7 +67,7 @@ export default function LoginModal() {
     const message = res.data.message;
     if (!res.ok) setErrorMessages([message])
     else {
-      history.push('/workspace')
+      history.push('/workspace/1')
     }
   }
 

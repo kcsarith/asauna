@@ -34,30 +34,7 @@ router.get('/:taskId(\\d+)', asyncHandler(async (req, res) => {
   res.json({ task });
 }))
 
-// Patch List Order
-router.patch('/swap_list-orders)', asyncHandler(async (req, res) => {
-  const { sourceTaskListOrder, destinationTaskListOrder } = req.body
-  Task.findByPk(sourceTaskListOrder)
-    .on('success', function (sourceTask) {
-      // Check if record exists in db
-      if (sourceTask) {
-        sourceTask.update({
-          listOrder: destinationTaskListOrder
-        })
-          .success(function () { console.log('Swapped Task 1') })
-      }
-    });
-  Task.findByPk(destinationTaskListOrder)
-    .on('success', function (destinationTask) {
-      // Check if record exists in db
-      if (destinationTask) {
-        destinationTask.update({
-          listOrder: sourceTaskListOrder
-        })
-          .success(function () { console.log('Swapped Task 2') })
-      }
-    })
-}))
+
 
 // UPDATE
 router.put('/edit/:taskId(\\d+)', asyncHandler(async (req, res, next) => {
@@ -91,7 +68,77 @@ router.put('/edit/:taskId(\\d+)', asyncHandler(async (req, res, next) => {
 }))
 
 
+// Patch List Order
+router.patch('/patch_list-order', asyncHandler(async (req, res) => {
+  const { taskId, taskId2 } = req.body
+  const task = await Task.patchListOrder(taskId, taskId2);
+  // task.save();
+  return { task };
+}))
 
+// Patch Name
+router.patch('/patch_name', asyncHandler(async (req, res) => {
+  const { taskId, newName } = req.body
+  const task = await Task.patchName(taskId, newName);
+  return { task };
+}))
+
+// Patch Description
+router.patch('/patch_description', asyncHandler(async (req, res) => {
+  const { taskId, newDescription } = req.body
+  const task = await Task.patchDescription(taskId, newDescription);
+  return { task };
+}))
+
+
+// Patch Due Date
+router.patch('/patch_due-date', asyncHandler(async (req, res) => {
+  const { taskId, newDueDate } = req.body
+  const task = await Task.patchDueDate(taskId, newDueDate);
+  return { task };
+}))
+
+// Patch Status
+router.patch('/patch_status', asyncHandler(async (req, res) => {
+  const { taskId, newStatus } = req.body
+  const task = await Task.patchStatus(taskId, newStatus);
+  return { task };
+}))
+
+// Patch Assigned to Id
+router.patch('/patch_assigned-to-id', asyncHandler(async (req, res) => {
+  const { taskId, newAssignedtoId } = req.body
+  const task = await Task.patchAssignedToId(taskId, newAssignedtoId);
+  return { task };
+}))
+
+// Patch Project Id
+router.patch('/patch_project-id', asyncHandler(async (req, res) => {
+  const { taskId, newProjectId } = req.body
+  const task = await Task.patchProjectId(taskId, newProjectId);
+  return { task };
+}))
+
+// Patch Priority
+router.patch('/patch_priority', asyncHandler(async (req, res) => {
+  const { taskId, newPriority } = req.body
+  const task = await Task.patchPriority(taskId, newPriority);
+  return { task };
+}))
+
+// Patch Parent Task Id
+router.patch('/patch_parent-task-id', asyncHandler(async (req, res) => {
+  const { taskId, newParentTaskId } = req.body
+  const task = await Task.patchParentTaskId(taskId, newParentTaskId);
+  return { task };
+}))
+
+// Patch UpdatedAt
+router.patch('/patch_updated-at', asyncHandler(async (req, res) => {
+  const { taskId } = req.body
+  const task = await Task.patchUpdatedAt(taskId);
+  return { task };
+}))
 
 //GET Followers
 router.get('/followers/:taskId(\\d+)', asyncHandler(async (req, res) => {
@@ -107,16 +154,13 @@ router.get('/followers/:taskId(\\d+)', asyncHandler(async (req, res) => {
   res.json({ taskFollowers });
 }));
 
-//DELETE FOLLOWER
-router.delete('ZZZZZZZ', asyncHandler(async (req, res) => {
 
-
+router.delete('/:taskId(\\d+)', asyncHandler(async (req, res) => {
+  const taskId = parseInt(req.params.taskId, 10);
+  const task = Task.findByPk(taskId);
+  console.log(task);
+  await task.destroy();
 }));
 
-//DELETE ALL FOLLOWERS
-router.delete('ZZZZZZZZZ', asyncHandler(async (req, res) => {
-
-  res.json({})
-}))
 
 module.exports = router;

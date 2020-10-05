@@ -5,6 +5,7 @@ export const SET_ALL_TASKS = 'SET_ALL_TASKS';
 export const SET_CURRENT_TASK = 'SET_CURRENT_TASK';
 export const CREATE_TASK = 'CREATE_TASK';
 export const DELETE_TASK = 'DELETE_TASK';
+export const SWAP_TASKS = 'SWAP_TASKS';
 
 export const setAllTasks = (tasks) => {
     return {
@@ -27,6 +28,14 @@ export const createTask = (task) => {
     }
 }
 
+export const swapTasks = (listOrder1, listOrder2) => {
+    return {
+        type: SWAP_TASKS,
+        listOrder1,
+        listOrder2
+    }
+}
+
 export const getAllTasks = () => {
     return async dispatch => {
         const res = await fetch(`/api/tasks`, {
@@ -43,21 +52,92 @@ export const getAllTasks = () => {
     }
 }
 
-export const swapMyTaskListOrders = (sourceTaskListOrder, destinationTaskListOrder) => {
-    return async () => {
-        const res = await fetch(`/api/tasks/swap_list-orders`, {
-            method: "patch",
+export const patchTaskListOrder = (taskId, taskId2) => {
+    return async (dispatch) => {
+        const res = await fetch(`/api/tasks/patch_list-order`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
             },
-            body: JSON.stringify({ sourceTaskListOrder, destinationTaskListOrder })
+            body: JSON.stringify({ taskId, taskId2 })
         });
-        const data = res.data = await res.json();
-        console.log(data);
         if (res.ok) {
             console.log('Successfully patched!');
         }
+        console.log('failed to patch!')
+        return res;
+    }
+}
+
+export const patchTaskName = (taskId, newName) => {
+    return async (dispatch) => {
+        const res = await fetch(`/api/tasks/patch_name`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+            },
+            body: JSON.stringify({ taskId, newName })
+        });
+        if (res.ok) {
+            console.log('Successfully patched!');
+        }
+        console.log('failed to patch!')
+        return res;
+    }
+}
+
+export const patchTaskDescription = (taskId, newDescription) => {
+    return async (dispatch) => {
+        const res = await fetch(`/api/tasks/patch_description`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+            },
+            body: JSON.stringify({ taskId, newDescription })
+        });
+        if (res.ok) {
+            console.log('Successfully patched!');
+        }
+        console.log('failed to patch!')
+        return res;
+    }
+}
+
+export const patchTaskStatus = (taskId, newStatus) => {
+    return async (dispatch) => {
+        const res = await fetch(`/api/tasks/patch_status`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+            },
+            body: JSON.stringify({ taskId, newStatus })
+        });
+        if (res.ok) {
+            console.log('Successfully patched!');
+        }
+        console.log('failed to patch!')
+        return res;
+    }
+}
+
+export const deleteTask = (taskId) => {
+    return async (dispatch) => {
+        const res = await fetch(`/api/tasks/${taskId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+            },
+            body: JSON.stringify({ taskId })
+        });
+        if (res.ok) {
+            console.log('Successfully DELETED!');
+        }
+        console.log('failed to patch!')
         return res;
     }
 }
@@ -72,27 +152,27 @@ export const getOneTask = (id) => {
         res.data = await res.json();
         const task = res.data.task;
         if (res.ok) {
-            dispatch(setAllTasks(task));
+            console.log('Successfully fetched!');
         }
-        return res;
+        return { task };
     }
 }
 
-export const createNewTask = (ownerId, workspaceId) => {
+export const createNewTask = (name, description, ownerId, projectId) => {
 
     return async dispatch => {
         const res = await fetch('/api/tasks', {
-            method: "post",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
             },
-            body: JSON.stringify({ ownerId, workspaceId })
+            body: JSON.stringify({ name, description, ownerId, projectId })
         });
         res.data = await res.json();
         const task = res.data.Task;
         if (res.ok) {
-            dispatch(createTask(task));
+            console.log('success!')
         }
         return res;
     }
@@ -104,6 +184,8 @@ export default function taskReducer(state = {}, action) {
             return action.tasks;
         case SET_CURRENT_TASK:
             return action.currentTask;
+        case SWAP_TASKS:
+            return { listOrder1: action.listOrder1, listOrder2: action.listOrder2 };
         default:
             return state;
     }
