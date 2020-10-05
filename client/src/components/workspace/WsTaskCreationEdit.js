@@ -127,12 +127,10 @@ export default function WsTaskCreationEdit({ currentTaskToEdit }) {
             // You can await here
             if (taskStatus === 'Incomplete') {
                 setTaskStatus('Completed')
-                console.log('completed!')
                 await dispatch(patchTaskStatus(taskId, 'Completed'))
             }
             else {
                 setTaskStatus('Incomplete')
-                console.log('incomplete!')
                 await dispatch(patchTaskStatus(taskId, 'Incomplete'))
             }
             // taskInfo[sideBarTaskId].name = e.target.value

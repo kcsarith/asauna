@@ -158,7 +158,6 @@ router.get('/followers/:taskId(\\d+)', asyncHandler(async (req, res) => {
 router.delete('/:taskId(\\d+)', asyncHandler(async (req, res) => {
   const taskId = parseInt(req.params.taskId, 10);
   const task = Task.findByPk(taskId);
-  console.log(task);
   await task.destroy();
 }));
 

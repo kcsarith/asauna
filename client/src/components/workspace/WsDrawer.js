@@ -110,7 +110,6 @@ export default function WsDrawer() {
 
     const handleDrawerClose = () => {
         setOpen(false);
-        console.log(location.pathname)
     };
 
     return (

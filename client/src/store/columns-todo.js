@@ -66,7 +66,7 @@ export const createNewColumnTodo = (name, description, ownerId, projectId) => {
         res.data = await res.json();
         const columnTodo = res.data.ColumnTodo;
         if (res.ok) {
-            console.log('success!')
+
         }
         return res;
     }

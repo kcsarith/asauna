@@ -45,7 +45,6 @@ router.put(
 );
 
 router.delete("/", asyncHandler(async (req, res) => {
-  console.log('Reached delete route')
   res.clearCookie('token');
   return res.json({ message: 'success' });
 }));

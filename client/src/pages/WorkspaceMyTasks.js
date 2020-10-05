@@ -154,7 +154,6 @@ export default function WorkspaceMyTasks() {
 
     const handleMyTaskOnBlur = e => {
         const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
-        console.log(taskInfo[sideBarTaskId]);
         async function fetchData() {
             // You can await here
             // const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
@@ -175,7 +174,6 @@ export default function WorkspaceMyTasks() {
             const res = await dispatch(createNewTask('untitled', 'Hmmm', 1, 1));
             const newTask = res.data.task
             const myTasksCopy = [...myTasks];
-            console.log(...myTasksCopy, newTask)
             await setMyTasks(prev => {
                 prev = [newTask, ...prev];
                 return prev;
@@ -187,7 +185,6 @@ export default function WorkspaceMyTasks() {
 
     const handleOnDragEnd = result => {
         //TODO, SWAP LIST ORDERS
-        console.log(result)
         const { destination, source, draggableId } = result;
         if (!destination) {
             return
@@ -196,8 +193,6 @@ export default function WorkspaceMyTasks() {
         if (destination.index === source.index && destination.droppableId === source.droppableId) {
             return
         }
-        console.log(myTasks[source.index]);
-        console.log(myTasks[destination.index]);
         const sourceTaskCopy = { ...myTasks[source.index] };
         const destinationTaskCopy = { ...myTasks[destination.index] };
         setMyTasks(prev => {
@@ -212,7 +207,6 @@ export default function WorkspaceMyTasks() {
         async function fetchData() {
             // You can await here
             const res = await dispatch(patchTaskListOrder(sourceTaskId, destinationTaskId));
-            console.log(res);
         }
         fetchData();
     };

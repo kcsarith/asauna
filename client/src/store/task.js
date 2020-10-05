@@ -63,9 +63,7 @@ export const patchTaskListOrder = (taskId, taskId2) => {
             body: JSON.stringify({ taskId, taskId2 })
         });
         if (res.ok) {
-            console.log('Successfully patched!');
         }
-        console.log('failed to patch!')
         return res;
     }
 }
@@ -81,9 +79,7 @@ export const patchTaskName = (taskId, newName) => {
             body: JSON.stringify({ taskId, newName })
         });
         if (res.ok) {
-            console.log('Successfully patched!');
         }
-        console.log('failed to patch!')
         return res;
     }
 }
@@ -99,9 +95,7 @@ export const patchTaskDescription = (taskId, newDescription) => {
             body: JSON.stringify({ taskId, newDescription })
         });
         if (res.ok) {
-            console.log('Successfully patched!');
         }
-        console.log('failed to patch!')
         return res;
     }
 }
@@ -117,9 +111,7 @@ export const patchTaskStatus = (taskId, newStatus) => {
             body: JSON.stringify({ taskId, newStatus })
         });
         if (res.ok) {
-            console.log('Successfully patched!');
         }
-        console.log('failed to patch!')
         return res;
     }
 }
@@ -135,9 +127,7 @@ export const deleteTask = (taskId) => {
             body: JSON.stringify({ taskId })
         });
         if (res.ok) {
-            console.log('Successfully DELETED!');
         }
-        console.log('failed to patch!')
         return res;
     }
 }
@@ -151,8 +141,7 @@ export const getOneTask = (id) => {
         });
         res.data = await res.json();
         const task = res.data.task;
-        if (res.ok) {
-            console.log('Successfully fetched!');
+        if (res.ok) {;
         }
         return { task };
     }
@@ -172,7 +161,6 @@ export const createNewTask = (name, description, ownerId, projectId) => {
         res.data = await res.json();
         const task = res.data.Task;
         if (res.ok) {
-            console.log('success!')
         }
         return res;
     }
