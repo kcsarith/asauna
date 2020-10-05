@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
     },
 
     whiteBg: {
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
+        padding: '50px',
     },
     descriptionTextArea: {
         minWidth: '400px',
