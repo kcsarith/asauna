@@ -162,24 +162,24 @@ export default function WorkspaceMyTasks() {
             const myTasksCopy = [...myTasks];
             oldTask.name = e.target.value;
             myTasksCopy.splice(oldTask.listOrder, 1, oldTask);
-            console.log(myTasksCopy)
-
             history.push(`/workspace/${workspaceId}/my-tasks/${sideBarTaskId}`);
         }
         fetchData();
 
     }
     const handleCreateNewTask = e => {
-        const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
-        console.log(taskInfo[sideBarTaskId]);
         async function fetchData() {
             // You can await here
             // const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
 
-            const res = await dispatch(createNewTask('untitiled', 'Hmmm', 1, 1));
-            console.log(res);
-            setCurrentTaskLo(res.data.task.listOrder)
-            history.push(`/workspace/${workspaceId}/my-tasks/${res.data.task.id}`);
+            const res = await dispatch(createNewTask('untitled', 'Hmmm', 1, 1));
+            const newTask = res.data.task
+            const myTasksCopy = [...myTasks];
+            console.log(...myTasksCopy, newTask)
+            await setMyTasks(prev => {
+                prev = [newTask, ...prev];
+                return prev;
+            })
         }
         fetchData();
 
@@ -202,7 +202,6 @@ export default function WorkspaceMyTasks() {
         const destinationTaskCopy = { ...myTasks[destination.index] };
         setMyTasks(prev => {
             prev = [...prev];
-            console.log(prev);
             prev.splice(source.index, 1);
             prev.splice(destination.index, 0, sourceTaskCopy);
             return prev;
