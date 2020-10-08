@@ -7,10 +7,10 @@ export const CREATE_TASK = 'CREATE_TASK';
 export const DELETE_TASK = 'DELETE_TASK';
 export const SWAP_TASKS = 'SWAP_TASKS';
 
-export const setAllTasks = (tasks) => {
+export const setAllTasks = (allTasks) => {
     return {
         type: SET_ALL_TASKS,
-        tasks
+        allTasks
     }
 }
 
@@ -52,7 +52,7 @@ export const getAllTasks = () => {
     }
 }
 
-export const patchTaskListOrder = (taskId, taskId2) => {
+export const patchTaskListOrder = (sourceIndex, destinationIndex) => {
     return async (dispatch) => {
         const res = await fetch(`/api/tasks/patch_list-order`, {
             method: "PATCH",
@@ -60,7 +60,7 @@ export const patchTaskListOrder = (taskId, taskId2) => {
                 "Content-Type": "application/json",
                 "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
             },
-            body: JSON.stringify({ taskId, taskId2 })
+            body: JSON.stringify({ sourceIndex, destinationIndex })
         });
         if (res.ok) {
         }
@@ -169,7 +169,7 @@ export const createNewTask = (name, description, ownerId, projectId) => {
 export default function taskReducer(state = {}, action) {
     switch (action.type) {
         case SET_ALL_TASKS:
-            return action.tasks;
+            return action.allTasks;
         case SET_CURRENT_TASK:
             return action.currentTask;
         case SWAP_TASKS:

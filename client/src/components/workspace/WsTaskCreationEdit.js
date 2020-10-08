@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import { Route, useHistory, useParams } from 'react-router-dom';
+import { Route, useHistory, useParams, useLocation } from 'react-router-dom';
 import { Avatar, Button, Grid, Snackbar, TextareaAutosize, Divider } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -11,7 +11,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { patchTaskName, patchTaskDescription, patchTaskStatus, deleteTask } from '../../store/task'
+import { getOneTask, patchTaskName, patchTaskDescription, patchTaskStatus, deleteTask } from '../../store/task'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,19 +65,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function WsTaskCreationEdit({ currentTaskToEdit }) {
+export default function WsTaskCreationEdit({
+    currentTaskLo,
+    myTasks, setMyTasks,
+    taskName, setTaskName,
+    taskDescription, setTaskDescription,
+    taskDueDate, setTaskDueDate,
+    taskStatus, setTaskStatus,
+    taskAssignedToId, setTaskAssignedToId,
+    taskProjectId, setTaskProjectId,
+    taskPriority, setTaskPriority,
+    taskParentTaskId, setTaskParentTaskId,
+}) {
     const classes = useStyles();
     const history = useHistory();
-
+    const location = useLocation();
     const authInfo = useSelector(state => state.auth)
-    const taskInfo = useSelector(state => state.task)
+    const taskInfo = useSelector(state => state.tasks)
     const dispatch = useDispatch();
     let { taskId } = useParams();
     // currentTaskToEdit = taskInfo[taskId]
     taskId = parseInt(taskId, 10)
-    const [taskName, setTaskName] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
-    const [taskStatus, setTaskStatus] = useState('');
     const [taskComment, setTaskComment] = useState('');
     const [assigner, setAssigner] = useState('');
     // const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -90,26 +98,38 @@ export default function WsTaskCreationEdit({ currentTaskToEdit }) {
     //     setSnackBarOpen(false);
     // };
 
-    const handleNameOnChange = e => {
-        setTaskName(e.target.value);
+    useEffect(() => {
         async function fetchData() {
             // You can await here
-            const res = await dispatch(patchTaskName(taskId, e.target.value));
-            // taskInfo[sideBarTaskId].name = e.target.value
-            // console.log(res);
+            const { task } = await dispatch(getOneTask(taskId));
+            setTaskName(task.name);
+            setTaskDescription(task.Description);
+            setTaskDueDate(task.dueDate);
+            setTaskStatus(task.status);
+            setTaskAssignedToId(task.assignedToId);
+            setTaskProjectId(task.projectId);
+            setTaskPriority(task.priority);
+            setTaskParentTaskId(task.parentTaskId);
         }
-        if (taskName) {
-            fetchData();
-        }
+        fetchData()
+    }, [taskId]); // Or [] if effect doesn't need props or state
+
+
+    const handleNameOnChange = e => {
+        let value = e.target.value;
+        setTaskName(value);
+        let prev = [...myTasks];
+        const currentTask = { ...prev[currentTaskLo] }
+        currentTask.name = value;
+        prev.splice(currentTaskLo, 1, currentTask);
+        console.log(prev)
+        setMyTasks(prev);
     }
 
     const handleDescriptionOnChange = e => {
         setTaskDescription(e.target.value);
         async function fetchData() {
-            // You can await here
-            const res = await dispatch(patchTaskDescription(taskId, e.target.value));
-            // taskInfo[sideBarTaskId].name = e.target.value
-            // console.log(res);
+            // const res = await dispatch(patchTaskDescription(taskId, e.target.value));
         }
         if (taskDescription) {
             fetchData();
@@ -123,20 +143,27 @@ export default function WsTaskCreationEdit({ currentTaskToEdit }) {
 
 
     const handleMarkComplete = () => {
+        let prev = [...myTasks];
+        console.log(prev)
         async function fetchData() {
             // You can await here
             if (taskStatus === 'Incomplete') {
-                setTaskStatus('Completed')
+                setTaskStatus('Completed');
+                prev[currentTaskLo].status = 'Completed';
+                setMyTasks(prev);
                 await dispatch(patchTaskStatus(taskId, 'Completed'))
             }
             else {
-                setTaskStatus('Incomplete')
+                setTaskStatus('Incomplete');
+                prev[currentTaskLo].status = 'Incomplete';
+                setMyTasks(prev);
                 await dispatch(patchTaskStatus(taskId, 'Incomplete'))
             }
             // taskInfo[sideBarTaskId].name = e.target.value
             // console.log(res);
 
         }
+
         if (taskStatus) {
             fetchData();
             // setSnackBarOpen(true);
@@ -153,24 +180,6 @@ export default function WsTaskCreationEdit({ currentTaskToEdit }) {
         }
         fetchData();
     }
-
-    useEffect(() => {
-        async function fetchData() {
-            // You can await here
-            const res = await fetch(`/api/tasks/${taskId}`);
-            if (res.ok) {
-                const data = await res.json();
-                setTaskName(currentTaskToEdit.name);
-                setTaskDescription(currentTaskToEdit.description);
-                setTaskStatus(currentTaskToEdit.status);
-                if (currentTaskToEdit.Assigner) {
-                    setAssigner(currentTaskToEdit.Assigner)
-                }
-            }
-        }
-        fetchData();
-    }, [taskId]); // Or [] if effect doesn't need props or state
-    if (!currentTaskToEdit) return <></>;
     return (
         <Grid item sm={5}>
             <Grid
@@ -185,28 +194,18 @@ export default function WsTaskCreationEdit({ currentTaskToEdit }) {
                 <Grid item sm={6} align="right"><Button color="primary" onClick={handleDeleteTask}><CloseIcon /></Button></Grid>
                 <Grid item sm={12} align="left"><TextareaAutosize resize='none' className={classes.titleTextArea} onChange={handleNameOnChange} value={taskName} variant="outlined" /></Grid>
                 <Grid item sm={3} align="left">Assignee</Grid>
-                <Grid item sm={9} align="left"><Avatar>
-                    {currentTaskToEdit.Assignee && <>
-                        {currentTaskToEdit.Assignee.username[0]}
-                        {currentTaskToEdit.Assignee.username[1]}
-                    </>}
-                </Avatar></Grid>
+                <Grid item sm={9} align="left"><Avatar>df</Avatar></Grid>
                 <Grid item sm={3} align="left">Due date</Grid>
-                <Grid item sm={9} align="left">{currentTaskToEdit.dueDate.slice(0, 10)}</Grid>
+                <Grid item sm={9} align="left">{taskDueDate}</Grid>
                 <Grid item sm={3} align="left">Projects</Grid>
                 <Grid item sm={9} align="left">Private</Grid>
                 <Grid item sm={3} align="left">Priority</Grid>
-                <Grid item sm={9} align="left" >{currentTaskToEdit.priority}</Grid>
+                <Grid item sm={9} align="left" >{taskPriority}</Grid>
                 <Grid item sm={3} align="left">Description</Grid>
                 <Grid item sm={9} align="left"><TextareaAutosize onChange={handleDescriptionOnChange} className={classes.descriptionTextArea} value={taskDescription} placeholder="Description" /> </Grid>
 
-                <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>
-                    {currentTaskToEdit.Assigner && <>
-                        {currentTaskToEdit.Assigner.username[0]}
-                        {currentTaskToEdit.Assigner.username[1]}
-                    </>}
-                </Avatar></Grid>
-                <Grid item sm={11} align="left">{currentTaskToEdit.Assigner.username} assigned this task</Grid>
+                <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>ZA</Avatar></Grid>
+                <Grid item sm={11} align="left">{'currentTaskToEdit.Assigner.username'} assigned this task</Grid>
                 <Grid item sm={12} align="center" component={Divider} />
                 <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>
                     {authInfo.username && <>

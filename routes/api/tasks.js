@@ -70,10 +70,10 @@ router.put('/edit/:taskId(\\d+)', asyncHandler(async (req, res, next) => {
 
 // Patch List Order
 router.patch('/patch_list-order', asyncHandler(async (req, res) => {
-  const { taskId, taskId2 } = req.body
-  const task = await Task.patchListOrder(taskId, taskId2);
-  // task.save();
-  return { task };
+  const { sourceIndex, destinationIndex } = req.body
+  const tasks = await Task.patchListOrder(sourceIndex, destinationIndex);
+  // tasks.save();
+  return { tasks };
 }))
 
 // Patch Name

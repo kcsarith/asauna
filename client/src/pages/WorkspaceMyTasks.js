@@ -99,13 +99,20 @@ export default function WorkspaceMyTasks() {
     const classes = useStyles();
     const { workspaceId } = useParams()
 
-    const taskInfo = useSelector(state => state.task)
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const [currentTask, setCurrentTask] = useState();
     const [currentTaskLo, setCurrentTaskLo] = useState();
     const [myTasks, setMyTasks] = useState([]);
+
+    const [singleTaskName, setSingleTaskName] = useState();
+    const [singleTaskDescription, setSingleTaskDescription] = useState();
+    const [singleTaskDueDate, setSingleTaskDueDate] = useState();
+    const [singleTaskStatus, setSingleTaskStatus] = useState();
+    const [singleTaskAssignedToId, setSingleTaskAssignedToId] = useState();
+    const [singleTaskProjectId, setSingleTaskProjectId] = useState();
+    const [singleTaskPriority, setSingleTaskPriority] = useState();
+    const [singleTaskParentTasktId, setSingleTaskParentTaskId] = useState();
     // useEffect(async () => {
     //     // This gets called after every render, by default
     //     // (the first one, and every one after that)
@@ -124,8 +131,7 @@ export default function WorkspaceMyTasks() {
         async function fetchData() {
             // You can await here
             const res = await dispatch(getAllTasks());
-            console.log(res.data.tasks);
-            await setMyTasks(res.data.tasks);
+            setMyTasks(res.data.tasks);
         }
         fetchData();
     }, [workspaceId]); // Or [] if effect doesn't need props or state
@@ -134,34 +140,34 @@ export default function WorkspaceMyTasks() {
         const myTasksLength = myTasks.length;
         const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10);
         const sideBarTaskLo = myTasksLength - parseInt(e.currentTarget.className.split('my-task-lo_')[1].split(' ')[0], 10);
-        setCurrentTask(myTasks[sideBarTaskLo]);
         setCurrentTaskLo(sideBarTaskLo);
+        setSingleTaskName(myTasks[sideBarTaskLo].name);
+        setSingleTaskDescription(myTasks[sideBarTaskLo].description);
+        setSingleTaskDueDate(myTasks[sideBarTaskLo].dueDate);
+        setSingleTaskStatus(myTasks[sideBarTaskLo].status);
+        setSingleTaskAssignedToId(myTasks[sideBarTaskLo].AssignedToId);
+        setSingleTaskProjectId(myTasks[sideBarTaskLo].projectId);
+        setSingleTaskPriority(myTasks[sideBarTaskLo].priority);
+        setSingleTaskParentTaskId(myTasks[sideBarTaskLo].parentTaskId);
         if (sideBarTaskId > 0) {
             history.push(`/workspace/${workspaceId}/my-tasks/${sideBarTaskId}`);
         }
     }
     const handleMyTaskOnChange = e => {
-        const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
-
-        async function fetchData() {
-            // You can await here
-            const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
-            // taskInfo[sideBarTaskId].name = e.target.value
-            // console.log(res);
-        }
-        fetchData();
+        let value = e.target.value;
+        let prev = [...myTasks];
+        const currentTask = { ...prev[currentTaskLo] }
+        currentTask.name = value;
+        prev.splice(currentTaskLo, 1, currentTask);
+        setSingleTaskName(e.target.value);
+        setMyTasks(prev);
+        console.log(myTasks[currentTaskLo].name)
     }
 
     const handleMyTaskOnBlur = e => {
         const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10)
         async function fetchData() {
             // You can await here
-            // const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
-            const oldTask = myTasks[currentTaskLo];
-            const myTasksCopy = [...myTasks];
-            oldTask.name = e.target.value;
-            myTasksCopy.splice(oldTask.listOrder, 1, oldTask);
-            history.push(`/workspace/${workspaceId}/my-tasks/${sideBarTaskId}`);
         }
         fetchData();
 
@@ -173,11 +179,10 @@ export default function WorkspaceMyTasks() {
 
             const res = await dispatch(createNewTask('untitled', 'Hmmm', 1, 1));
             const newTask = res.data.task
-            const myTasksCopy = [...myTasks];
-            await setMyTasks(prev => {
-                prev = [newTask, ...prev];
-                return prev;
-            })
+            const prev = [...myTasks]
+            console.log(newTask)
+            setMyTasks([newTask, ...prev])
+            console.log(myTasks)
         }
         fetchData();
 
@@ -185,7 +190,7 @@ export default function WorkspaceMyTasks() {
 
     const handleOnDragEnd = result => {
         //TODO, SWAP LIST ORDERS
-        const { destination, source, draggableId } = result;
+        const { destination, source } = result;
         if (!destination) {
             return
         }
@@ -193,20 +198,28 @@ export default function WorkspaceMyTasks() {
         if (destination.index === source.index && destination.droppableId === source.droppableId) {
             return
         }
-        const sourceTaskCopy = { ...myTasks[source.index] };
-        const destinationTaskCopy = { ...myTasks[destination.index] };
-        setMyTasks(prev => {
-            prev = [...prev];
-            prev.splice(source.index, 1);
-            prev.splice(destination.index, 0, sourceTaskCopy);
-            return prev;
-        });
+        let sourceTaskCopy = { ...myTasks[source.index] };
+        let destinationTaskCopy = { ...myTasks[destination.index] };
         const sourceTaskId = sourceTaskCopy.id;
         const destinationTaskId = destinationTaskCopy.id;
 
+
+        setMyTasks(prev => {
+            prev = [...prev]
+            // Remove from previous items array
+            prev.splice(source.index, 1);
+            // Adding to new items array location
+            prev.splice(destination.index, 0, sourceTaskCopy);
+
+            prev.forEach((ele, index) => {
+                ele.listOrder = myTasks.length - index;
+            })
+            return prev
+        })
         async function fetchData() {
             // You can await here
-            const res = await dispatch(patchTaskListOrder(sourceTaskId, destinationTaskId));
+            const res = await dispatch(patchTaskListOrder(source.index, destination.index));
+            console.log(res)
         }
         fetchData();
     };
@@ -236,20 +249,21 @@ export default function WorkspaceMyTasks() {
                         <Droppable droppableId='droppable_my-task'>
                             {(provided) => (
                                 <Grid container direction="row" justify="space-between" spacing={0} className={classes.whiteBg} innerRef={provided.innerRef} {...provided.droppableProps} >
-                                    {myTasks.length > 0 && myTasks.map((task, index) =>
-                                        <Draggable key={task.id} draggableId={`draggable-task_${task.id}`} index={index}>
+                                    {myTasks.length > 0 && myTasks.map((task, index) => {
+                                        return <Draggable key={task.id} draggableId={`draggable-task_${task.id}`} index={index}>
                                             {provided => (
                                                 <Grid container {...provided.draggableProps} {...provided.dragHandleProps} innerRef={provided.innerRef}>
                                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                                                     <Grid item sm={1} component={AppsIcon} />
-                                                    <Grid item sm={1} component={CheckCircleOutlineIcon} color={(task.status === 'Incomplete') ? "secondary" : "primary"} />
-                                                    <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} defaultValue={task.name} fullWidth onClick={handleMyTaskClick} onChange={handleMyTaskOnChange} onBlur={handleMyTaskOnBlur} align="left" >
+                                                    <Grid item sm={1} component={CheckCircleOutlineIcon} color={(myTasks[myTasks.length - task.listOrder].status === 'Incomplete') ? "secondary" : "primary"} />
+                                                    <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} value={myTasks[myTasks.length - task.listOrder].name} fullWidth onClick={handleMyTaskClick} onChange={handleMyTaskOnChange} onBlur={handleMyTaskOnBlur} align="left" >
                                                         {task.name}
                                                     </Grid>
-                                                    <Grid item sm={2} align="right">{task.dueDate.slice(0, 10)}</Grid>
+                                                    <Grid item sm={2} align="right">{myTasks[myTasks.length - task.listOrder].dueDate.slice(0, 10)}</Grid>
                                                 </Grid>
                                             )}
                                         </Draggable>
+                                    }
                                     )}
                                     {provided.placeholder}
                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
@@ -261,9 +275,27 @@ export default function WorkspaceMyTasks() {
                 </Grid>
             </Grid>
             {/* THIS IS THE FORM! */}
-            {currentTask &&
-                <Route path="/workspace/:workspaceId/my-tasks/:taskId" render={() => <WsTaskCreationEdit currentTaskToEdit={myTasks[currentTaskLo]} />} />}
+            <Route path="/workspace/:workspaceId/my-tasks/:taskId" render={() => <WsTaskCreationEdit
 
+                currentTaskLo={currentTaskLo}
+                myTasks={myTasks}
+                setMyTasks={setMyTasks}
+                taskName={singleTaskName}
+                setTaskName={setSingleTaskName}
+                taskDescription={singleTaskDescription}
+                setTaskDescription={setSingleTaskDescription}
+                taskDueDate={singleTaskDueDate}
+                setTaskDueDate={setSingleTaskDueDate}
+                taskStatus={singleTaskStatus}
+                setTaskStatus={setSingleTaskStatus}
+                taskAssignedToId={singleTaskAssignedToId}
+                setTaskAssignedToId={setSingleTaskAssignedToId}
+                taskProjectId={singleTaskProjectId}
+                setTaskProjectId={setSingleTaskProjectId}
+                taskPriority={singleTaskPriority}
+                setTaskPriority={setSingleTaskPriority}
+                taskParentTaskId={singleTaskParentTasktId}
+                setTaskParentTaskId={setSingleTaskParentTaskId} />} />
         </Grid>
     );
 }

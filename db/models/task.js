@@ -13,22 +13,24 @@ module.exports = (sequelize, DataTypes) => {
     parentTaskId: DataTypes.INTEGER,
   }, {});
 
-  Task.patchListOrder = async function (taskId, taskId2) {
-    const task = await Task.findByPk(taskId);
-    const task2 = await Task.findByPk(taskId2);
+  Task.patchListOrder = async function (sourceIndex, destinationIndex) {
+    const tasks = await Task.findAll({
+      order: [['listOrder', 'DESC']],
+    });
+    if (tasks) {
+      const sourceTaskCopy = tasks[sourceIndex]
 
-    const taskListOrder = task.listOrder;
-    const taskListOrder2 = task2.listOrder;
-    if (task && task2) {
-      await task.update({
-        listOrder: taskListOrder2
+      // Remove from previous items array
+      tasks.splice(sourceIndex, 1);
+      // Adding to new items array location
+      tasks.splice(destinationIndex, 0, sourceTaskCopy);
+      console.log(tasks.length)
+      tasks.forEach(async (ele, index) => {
+        console.log(tasks[index].dataValues.name)
+        await tasks[index].update({ listOrder: tasks.length - index })
       });
-      await task2.update({
-        listOrder: taskListOrder
-      });
-      await task.save();
-      await task2.save();
-      return { task, task2 }
+      // await tasks.save();
+      return { tasks }
     }
   };
 
