@@ -43,7 +43,10 @@ const useStyles = makeStyles((theme) => ({
     descriptionTextArea: {
         minWidth: '400px',
         minHeight: '80px',
-        border: 'none'
+        border: 'none',
+        '&:hover': {
+            border: '1px solid #000000'
+        },
     },
     commentTextArea: {
         minWidth: '90%',
@@ -54,7 +57,11 @@ const useStyles = makeStyles((theme) => ({
         minWidth: '600px',
         fontSize: 25,
         resize: 'none',
-        border: 'none'
+        border: 'none',
+        padding: '20px',
+        '&:hover': {
+            border: '1px solid #000000'
+        },
     },
     avatarSm: {
         height: '24px',
