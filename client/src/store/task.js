@@ -68,6 +68,22 @@ export const patchTaskListOrder = (sourceIndex, destinationIndex) => {
     }
 }
 
+export const patchTaskListOrderColumns = (source, destination) => {
+    return async (dispatch) => {
+        const res = await fetch(`/api/tasks/patch_list-order-columns`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+            },
+            body: JSON.stringify({ source, destination })
+        });
+        if (res.ok) {
+        }
+        return res;
+    }
+}
+
 export const patchTaskName = (taskId, newName) => {
     return async (dispatch) => {
         const res = await fetch(`/api/tasks/patch_name`, {
@@ -141,7 +157,8 @@ export const getOneTask = (id) => {
         });
         res.data = await res.json();
         const task = res.data.task;
-        if (res.ok) {;
+        if (res.ok) {
+            ;
         }
         return { task };
     }

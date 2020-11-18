@@ -255,7 +255,7 @@ export default function WorkspaceMyTasks() {
                                                 <Grid container {...provided.draggableProps} {...provided.dragHandleProps} innerRef={provided.innerRef}>
                                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                                                     <Grid item sm={1} component={AppsIcon} />
-                                                    <Grid item sm={1} component={CheckCircleOutlineIcon} color={(myTasks[myTasks.length - task.listOrder].status === 'Incomplete') ? "secondary" : "primary"} />
+                                                    <Grid item sm={1} component={CheckCircleOutlineIcon} color={(myTasks[myTasks.length - task.listOrder].status !== 'Completed') ? "secondary" : "primary"} />
                                                     <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} value={myTasks[myTasks.length - task.listOrder].name} fullWidth onClick={handleMyTaskClick} onChange={handleMyTaskOnChange} onBlur={handleMyTaskOnBlur} align="left" >
                                                         {task.name}
                                                     </Grid>

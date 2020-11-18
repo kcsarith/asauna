@@ -12,7 +12,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getOneTask, patchTaskName, patchTaskDescription, patchTaskStatus, deleteTask } from '../../store/task'
-import { getTaskComments } from '../../store/comment'
+import { getTaskComments, addComment } from '../../store/comment'
 
 import Comment from '../../components/workspace/TaskComment'
 const useStyles = makeStyles((theme) => ({
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
         resize: 'none',
     },
     titleTextArea: {
-        minWidth: '600px',
+        minWidth: '100%',
         fontSize: 25,
         resize: 'none',
         border: 'none',
@@ -162,17 +162,17 @@ export default function WsTaskCreationEdit({
         console.log(prev)
         async function fetchData() {
             // You can await here
-            if (taskStatus === 'Incomplete') {
+            if (taskStatus !== 'Completed') {
                 setTaskStatus('Completed');
                 prev[currentTaskLo].status = 'Completed';
                 setMyTasks(prev);
                 await dispatch(patchTaskStatus(taskId, 'Completed'))
             }
             else {
-                setTaskStatus('Incomplete');
-                prev[currentTaskLo].status = 'Incomplete';
+                setTaskStatus('Todo');
+                prev[currentTaskLo].status = 'Todo';
                 setMyTasks(prev);
-                await dispatch(patchTaskStatus(taskId, 'Incomplete'))
+                await dispatch(patchTaskStatus(taskId, 'Todo'))
             }
             // taskInfo[sideBarTaskId].name = e.target.value
             // console.log(res);
@@ -196,6 +196,25 @@ export default function WsTaskCreationEdit({
         }
         fetchData();
     }
+    const handleAddComment = () => {
+        console.log(authInfo.id)
+        console.log(taskId)
+        console.log(taskComment)
+        const ownerId = authInfo.id;
+        const message = taskComment;
+        async function fetchData() {
+            const res = await dispatch(addComment(ownerId, taskId, message));
+            if (res) {
+                setTaskComment('');
+                let { comment, user } = res;
+                console.log(comment)
+                console.log(user.fulfillmentValue)
+                comment.User = user.fulfillmentValue;
+                setTaskCommentState([...taskCommentState, comment])
+            }
+        }
+        fetchData();
+    }
     return (
         <Grid item sm={5}>
             <Grid
@@ -204,7 +223,7 @@ export default function WsTaskCreationEdit({
                 justify="space-between"
                 spacing={3, 3}
                 className={classes.whiteBg} >
-                {taskStatus === 'Incomplete' ?
+                {taskStatus !== 'Completed' ?
                     <Grid item sm={6} align="left"><Button variant="contained" onClick={handleMarkComplete} color="primary">Mark Complete</Button></Grid> :
                     <Grid item sm={6} align="left"><Button variant="contained" onClick={handleMarkComplete} color="secondary">Mark Incomplete</Button></Grid>}
                 <Grid item sm={6} align="right"><Button color="primary" onClick={handleDeleteTask}><CloseIcon /></Button></Grid>
@@ -223,19 +242,19 @@ export default function WsTaskCreationEdit({
                 <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>{assigner && <>{assigner.username[0]}{assigner.username[1]}</>}</Avatar></Grid>
                 <Grid item sm={11} align="left">{assigner && assigner.username} assigned this task</Grid>
                 <Grid item sm={12} align="center" component={Divider} />
+                {taskCommentState && taskCommentState.map((ele, index) =>
+                    <Grid item sm={12} >
+                        {<Comment comment={ele} />}
+                    </Grid>
+                )}
                 <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>
                     {authInfo.username && <>
                         {authInfo.username[0]}
                         {authInfo.username[1]}
                     </>}
                 </Avatar></Grid>
-                {taskCommentState && taskCommentState.map((ele, index) =>
-                    <Grid item sm={12} >
-                        {<Comment comment={ele} />}
-                    </Grid>
-                )}
                 <Grid item sm={11} align="left"><TextareaAutosize onChange={handleCommentOnChange} className={classes.commentTextArea} value={taskComment} placeholder="Type Comment here" /> </Grid>
-                <Grid item sm={11} align="right"><Button variant="contained" color="primary">Comment</Button></Grid>
+                <Grid item sm={11} align="right"><Button variant="contained" color="primary" onClick={handleAddComment}>Comment</Button></Grid>
 
                 <Grid item sm={12} align="center" component={Divider} />
             </Grid>

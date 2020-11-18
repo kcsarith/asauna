@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import '../styles/ws-board.css'
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { getAllTasks } from '../store/task'
+import { getAllTasks, patchTaskListOrderColumns } from '../store/task'
 
 function WorkspaceProject() {
     const dispatch = useDispatch();
@@ -47,7 +47,7 @@ function WorkspaceProject() {
         fetchData();
     }, [workspaceId]); // Or [] if effect doesn't need props or state
 
-    const handleDragEnd = ({ destination, source }) => {
+    const handleDragEnd = async ({ destination, source }) => {
         if (!destination) {
             return
         }
@@ -58,18 +58,21 @@ function WorkspaceProject() {
 
         // Creating a copy of item before removing it from state
         const itemCopy = { ...state[source.droppableId].items[source.index] }
+        async function fetchData() {
+            // const res = await dispatch(patchTaskListOrderColumns(source, destination));
+            setState(prev => {
+                prev = { ...prev }
+                // Remove from previous items array
+                prev[source.droppableId].items.splice(source.index, 1)
 
-        setState(prev => {
-            prev = { ...prev }
-            // Remove from previous items array
-            prev[source.droppableId].items.splice(source.index, 1)
 
+                // Adding to new items array location
+                prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
 
-            // Adding to new items array location
-            prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
-
-            return prev
-        })
+                return prev
+            })
+        }
+        fetchData()
     }
 
 
@@ -92,7 +95,6 @@ function WorkspaceProject() {
                                                 return (
                                                     <Draggable key={el.id} index={index} draggableId={el.id.toString()}>
                                                         {(provided, snapshot) => {
-                                                            console.log(el)
                                                             return (
                                                                 <div
                                                                     className={`item ${snapshot.isDragging && "dragging"}`}

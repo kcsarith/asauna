@@ -21,4 +21,14 @@ router.get('/task/:taskId', asyncHandler(async (req, res) => {
     return res.json({ comments });
 }))
 
+router.post('/task/:taskId', asyncHandler(async (req, res) => {
+    const ownerId = req.body.ownerId;
+    const taskId = parseInt(req.params.taskId, 10);
+    const message = req.body.message;
+    const user = User.findByPk(ownerId)
+    let comment = await Comment.create({ ownerId, taskId, message });
+    return res.json({ comment, user });
+}))
+
+
 module.exports = router;

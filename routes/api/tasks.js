@@ -76,6 +76,13 @@ router.patch('/patch_list-order', asyncHandler(async (req, res) => {
   return { tasks };
 }))
 
+router.patch('/patch_list-order-columns', asyncHandler(async (req, res) => {
+  const { source, destination } = req.body
+  const tasks = await Task.patchListOrderColumns(source, destination);
+  // tasks.save();
+  return { tasks };
+}))
+
 // Patch Name
 router.patch('/patch_name', asyncHandler(async (req, res) => {
   const { taskId, newName } = req.body

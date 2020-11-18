@@ -34,7 +34,7 @@ export default function WorkspaceHome() {
             const res = await dispatch(getAllTasks());
             // setMyTasks(res.data.tasks);
             let tasks = res.data.tasks;
-            const incompleteTasks = tasks.filter(ele => ele.status == 'Incomplete')
+            const incompleteTasks = tasks.filter(ele => ele.status !== 'Completed')
             await setTasksDueState(incompleteTasks);
             console.log(incompleteTasks)
         }

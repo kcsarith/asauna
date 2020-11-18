@@ -34,6 +34,32 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
+  Task.patchListOrderColumns = async function (source, destination) {
+    const tasks = await Task.findAll({
+      order: [['listOrder', 'DESC']],
+    });
+    if (tasks) {
+      if (source.droppableId === destination.droppableId) {
+        const sourceTaskCopy = { ...tasks[source.index] };
+        console.log(destination.index)
+        console.log(source.index)
+        tasks.splice(source.index, 1);
+        tasks.splice(destination.index, 0, sourceTaskCopy);
+        await tasks.save();
+        return { tasks }
+      }
+      // const sourceTaskCopy = tasks[source]
+      // tasks.splice(source, 1);
+      // tasks.splice(destination, 0, sourceTaskCopy);
+      // console.log(tasks.length)
+      // tasks.forEach(async (ele, index) => {
+      //   console.log(tasks[index].dataValues.name)
+      //   await tasks[index].update({ listOrder: tasks.length - index })
+      // });
+      // return { tasks }
+    }
+  };
+
   Task.patchName = async function (taskId, newName) {
     const task = await Task.findByPk(taskId);
     if (task) {

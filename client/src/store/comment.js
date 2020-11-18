@@ -1,3 +1,5 @@
+// This file includes the actions and reducer.
+import Cookies from 'js-cookie'
 
 export const SET_TASK_COMMENTS = 'SET_TASK_COMMENTS';
 
@@ -16,6 +18,27 @@ export const getTaskComments = (taskId) => {
         if (res.ok) {
             dispatch(setTaskComments(comments));
             return comments
+        }
+        return res;
+    }
+}
+
+export const addComment = (ownerId, taskId, message) => {
+    console.log(ownerId);
+    console.log(taskId);
+    console.log(message)
+    return async dispatch => {
+        const res = await fetch(`/api/comments/task/${taskId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "XSRF-TOKEN": Cookies.get("XSRF-TOKEN")
+            },
+            body: JSON.stringify({ ownerId, taskId, message })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            return data
         }
         return res;
     }
