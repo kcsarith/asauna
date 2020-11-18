@@ -147,7 +147,8 @@ router.get('/followers/:taskId(\\d+)', asyncHandler(async (req, res) => {
         include: [{ model: User }, { model: Task }],
         where: {
             taskId: {
-                [Op.eq]: taskId
+                [Op.eq]: taskId,
+                
             }
         }
     });

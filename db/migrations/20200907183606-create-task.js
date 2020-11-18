@@ -26,7 +26,7 @@ module.exports = {
       status: {
         allowNull: false,
         type: Sequelize.STRING,
-        defaultValue: "Incomplete",
+        defaultValue: "Todo",
       },
       ownerId: {
         allowNull: false,

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Task, User, TaskFollower, Project } = require('../../db/models');
+const { Task, User, TaskFollower, Project, } = require('../../db/models');
 const { Op } = require('sequelize');
 
 const asyncHandler = require('express-async-handler');
@@ -157,8 +157,11 @@ router.get('/followers/:taskId(\\d+)', asyncHandler(async (req, res) => {
 
 router.delete('/:taskId(\\d+)', asyncHandler(async (req, res) => {
   const taskId = parseInt(req.params.taskId, 10);
-  const task = Task.findByPk(taskId);
-  await task.destroy();
+  Task.destroy({
+    where: {
+      id: taskId
+    }
+  })
 }));
 
 

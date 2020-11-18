@@ -12,8 +12,9 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getOneTask, patchTaskName, patchTaskDescription, patchTaskStatus, deleteTask } from '../../store/task'
+import { getTaskComments } from '../../store/comment'
 
-
+import Comment from '../../components/workspace/TaskComment'
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -95,6 +96,7 @@ export default function WsTaskCreationEdit({
     taskId = parseInt(taskId, 10)
     const [taskComment, setTaskComment] = useState('');
     const [assigner, setAssigner] = useState('');
+    const [taskCommentState, setTaskCommentState] = useState();
     // const [snackBarOpen, setSnackBarOpen] = useState(false);
 
     // const handleSnackBarClose = (event, reason) => {
@@ -109,16 +111,22 @@ export default function WsTaskCreationEdit({
         async function fetchData() {
             // You can await here
             const { task } = await dispatch(getOneTask(taskId));
-            setTaskName(task.name);
-            setTaskDescription(task.Description);
-            setTaskDueDate(task.dueDate);
-            setTaskStatus(task.status);
-            setTaskAssignedToId(task.assignedToId);
-            setTaskProjectId(task.projectId);
-            setTaskPriority(task.priority);
-            setTaskParentTaskId(task.parentTaskId);
+            const comments = await dispatch(getTaskComments(taskId));
+            console.log(task)
+            await setAssigner(task.Assigner)
+            await setTaskName(task.name);
+            await setTaskDescription(task.Description);
+            await setTaskDueDate(task.dueDate);
+            await setTaskStatus(task.status);
+            await setTaskAssignedToId(task.assignedToId);
+            await setTaskProjectId(task.projectId);
+            await setTaskPriority(task.priority);
+            await setTaskParentTaskId(task.parentTaskId);
+            await setTaskCommentState(comments)
+            console.log(comments)
         }
         fetchData()
+        console.log(taskCommentState)
     }, [taskId]); // Or [] if effect doesn't need props or state
 
 
@@ -184,6 +192,7 @@ export default function WsTaskCreationEdit({
             // taskInfo[sideBarTaskId].name = e.target.value
             // console.log(res);
             history.push('/workspace/1/my-tasks')
+            console.log(res)
         }
         fetchData();
     }
@@ -211,8 +220,8 @@ export default function WsTaskCreationEdit({
                 <Grid item sm={3} align="left">Description</Grid>
                 <Grid item sm={9} align="left"><TextareaAutosize onChange={handleDescriptionOnChange} className={classes.descriptionTextArea} value={taskDescription} placeholder="Description" /> </Grid>
 
-                <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>ZA</Avatar></Grid>
-                <Grid item sm={11} align="left">{'currentTaskToEdit.Assigner.username'} assigned this task</Grid>
+                <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>{assigner && <>{assigner.username[0]}{assigner.username[1]}</>}</Avatar></Grid>
+                <Grid item sm={11} align="left">{assigner && assigner.username} assigned this task</Grid>
                 <Grid item sm={12} align="center" component={Divider} />
                 <Grid item sm={1} align="left"><Avatar className={classes.avatarSm}>
                     {authInfo.username && <>
@@ -220,8 +229,14 @@ export default function WsTaskCreationEdit({
                         {authInfo.username[1]}
                     </>}
                 </Avatar></Grid>
+                {taskCommentState && taskCommentState.map((ele, index) =>
+                    <Grid item sm={12} >
+                        {<Comment comment={ele} />}
+                    </Grid>
+                )}
                 <Grid item sm={11} align="left"><TextareaAutosize onChange={handleCommentOnChange} className={classes.commentTextArea} value={taskComment} placeholder="Type Comment here" /> </Grid>
                 <Grid item sm={11} align="right"><Button variant="contained" color="primary">Comment</Button></Grid>
+
                 <Grid item sm={12} align="center" component={Divider} />
             </Grid>
             {/* <Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
@@ -230,6 +245,7 @@ export default function WsTaskCreationEdit({
                     <Alert onClose={handleSnackBarClose} severity="warning">Task Marked Incomplete</Alert>
                 }
             </Snackbar> */}
+
         </Grid >
     )
 }

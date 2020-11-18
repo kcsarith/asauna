@@ -7,16 +7,7 @@ import { v4 } from "uuid";
 import '../styles/ws-board.css'
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { getAllColumnTodos } from '../store/columns-todo'
-const item = {
-    id: v4(),
-    name: "Clean the house"
-}
-
-const item2 = {
-    id: v4(),
-    name: "Wash the car"
-}
+import { getAllTasks } from '../store/task'
 
 function WorkspaceProject() {
     const dispatch = useDispatch();
@@ -24,7 +15,7 @@ function WorkspaceProject() {
     const [state, setState] = useState({
         "todo": {
             title: "Todo",
-            items: [item, item2]
+            items: []
         },
         "in-progress": {
             title: "In Progress",
@@ -39,11 +30,17 @@ function WorkspaceProject() {
     useEffect(() => {
         async function fetchData() {
             // You can await here
-            const res = await dispatch(getAllColumnTodos());
+            const res = await dispatch(getAllTasks());
             console.log(res.data);
+
+            const completedTasks = res.data.tasks.filter(ele => ele.status === 'Completed')
+            const inProgressTasks = res.data.tasks.filter(ele => ele.status === 'Incomplete')
+            const todoTasks = res.data.tasks.filter(ele => ele.status === 'Todo')
             await setState(prev => {
                 prev = { ...prev };
-                prev['todo'].items = res.data.todoColumns;
+                prev['done'].items = completedTasks;
+                prev['in-progress'].items = inProgressTasks;
+                prev['todo'].items = todoTasks;
                 return prev
             });
         }
@@ -103,7 +100,7 @@ function WorkspaceProject() {
                                                                     {...provided.draggableProps}
                                                                     {...provided.dragHandleProps}
                                                                 >
-                                                                    {el.id}
+                                                                    {el.name}
                                                                 </div>
                                                             )
                                                         }}

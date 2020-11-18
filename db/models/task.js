@@ -122,6 +122,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
+  Task.deleteById = async function (taskId) {
+    const task = await Task.findByPk(taskId);
+    await task.destroy();
+    return {}
+  }
   // Task.create = async function ({ ownerId, workspaceId }) {
   //   const task = await Task.create({
   //     ownerId,
