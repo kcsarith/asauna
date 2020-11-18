@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Divider, Container, InputBase } from '@material-ui/core';
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 export default function WorkspaceHome() {
 
     const dispatch = useDispatch();
+    const history = useHistory();
     const classes = useStyles();
 
     const [tasksDueState, setTasksDueState] = useState([]);
@@ -65,7 +66,7 @@ export default function WorkspaceHome() {
                                 <Grid container key={index}>
                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                                     <Grid item sm={1} component={AppsIcon} />
-                                    <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} value={task.name} fullWidth onClick={handleMyTaskClick} align="left" >{task.name}</Grid>
+                                    <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} value={task.name} fullWidth onClick={() => history.push(`/workspace/1/my-tasks/${task.id}`)} align="left" >{task.name}</Grid>
                                     <Grid item sm={2} align="right">{task.dueDate.slice(0, 10)}</Grid>
                                 </Grid>
                             )
