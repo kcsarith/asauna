@@ -70,7 +70,16 @@ export default function LoginModal() {
       history.push('/workspace/1')
     }
   }
-
+  const handleDemoLogin = async (e) => {
+    e.preventDefault();
+    const res = await dispatch(login('Demo-lition', 'password'));
+    const message = res.data.message;
+    if (!res.ok) setErrorMessages([message])
+    else {
+      history.push('/workspace/1')
+      alert('Logged in as Demo User')
+    }
+  }
   return (
     <>
       <Button onClick={handleClickOpen} className={classes.modalLink}>
@@ -125,6 +134,10 @@ export default function LoginModal() {
                 <Grid item className="modal-signup-link">
                   <p>Don't have an account?&nbsp;
                   <Link href="/create-account" variant="body2">Sign Up
+                  </Link>
+                  </p>
+                  <p>or login as a &nbsp;
+                  <Link href="#" variant="body2" onClick={handleDemoLogin}>demo user
                   </Link>
                   </p>
                 </Grid>

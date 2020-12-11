@@ -1,1 +1,9 @@
 /* TODO Add site wide styles */
+.hover-highlight:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.active{
+    background-color: lightblue;
+}

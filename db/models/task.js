@@ -149,8 +149,19 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Task.deleteById = async function (taskId) {
-    const task = await Task.findByPk(taskId);
-    await task.destroy();
+    const tasks = await Task.findAll({
+      order: [['listOrder', 'DESC']],
+    });
+    if (tasks) {
+      const task = await Task.findByPk(taskId);
+      await task.destroy();
+      tasks.forEach(async (ele, index) => {
+        console.log(tasks[index].dataValues.name)
+        await tasks[index].update({ listOrder: tasks.length - index })
+      });
+      await tasks.save();
+      return { message: 'DELETED A TASK' }
+    }
     return {}
   }
   // Task.create = async function ({ ownerId, workspaceId }) {
@@ -165,9 +176,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Task.hasMany(models.Task, { foreignKey: 'parentTaskId' });
     Task.hasMany(models.Comment, { foreignKey: 'taskId' });
-    Task.hasMany(models.TodoColumn, { foreignKey: 'taskId' });
-    Task.hasMany(models.InProgressColumn, { foreignKey: 'taskId' });
-    Task.hasMany(models.DoneColumn, { foreignKey: 'taskId' });
+    // Task.hasMany(models.TodoColumn, { foreignKey: 'taskId' });
+    // Task.hasMany(models.InProgressColumn, { foreignKey: 'taskId' });
+    // Task.hasMany(models.DoneColumn, { foreignKey: 'taskId' });
 
     Task.belongsTo(models.User, { foreignKey: 'ownerId', as: 'Assigner' });
     Task.belongsTo(models.User, { foreignKey: 'assignedToId', as: 'Assignee' });

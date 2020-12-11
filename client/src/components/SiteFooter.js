@@ -25,10 +25,10 @@ const footers = [
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
+
+            <p>Check out the source <a target='_blank' href='https://github.com/kcsarith/asauna'>here</a></p>
             {'Copyright © '}
-            <Link color="inherit" href="/">
-                Asauna
-      </Link>{' '}
+                Krisna Sarith{' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -78,29 +78,49 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }));
-
-export default function SiteHeader() {
+export default function SiteFooter() {
 
     const classes = useStyles();
     return (
         <Container maxWidth="md" component="footer" className={classes.footer}>
             <Grid container spacing={4} justify="space-evenly">
-                {footers.map((footer) => (
-                    <Grid item xs={6} sm={3} key={footer.title}>
-                        <Typography variant="h6" color="textPrimary" gutterBottom>
-                            {footer.title}
-                        </Typography>
-                        <ul>
-                            {footer.description.map((item) => (
-                                <li key={item}>
-                                    <Link href="#" variant="subtitle1" color="textSecondary">
-                                        {item}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </Grid>
-                ))}
+                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', flexDirection: "column" }}>
+                    <Typography variant="h6" color="textPrimary" style={{ textAlign: 'center' }} gutterBottom>
+                        Social Media Links
+                    </Typography>
+                </Grid>
+                <Grid item xs={6} sm={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+                    <Typography variant="h6" color="textPrimary" gutterBottom>
+                        Github
+                    </Typography>
+                    <Link href="https://github.com/kcsarith" target="_blank" variant="subtitle1" color="textSecondary">
+                        <img src='https://www.flaticon.com/svg/static/icons/svg/25/25231.svg' height={32} />
+                    </Link>
+                </Grid>
+                <Grid item xs={6} sm={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+                    <Typography variant="h6" color="textPrimary" gutterBottom>
+                        Linked In
+                    </Typography>
+                    <Link href="https://www.linkedin.com/in/krisna-sarith-11788b1b9" target="_blank" variant="subtitle1" color="textSecondary">
+                        <img src='https://image.flaticon.com/icons/png/512/61/61109.png' height={32} />
+                    </Link>
+                </Grid>
+                <Grid item xs={6} sm={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+                    <Typography variant="h6" color="textPrimary" gutterBottom>
+                        Angellist
+                    </Typography>
+                    <Link href="https://angel.co/u/krisna-charlie-sarith" target="_blank" variant="subtitle1" color="textSecondary">
+                        <img src='https://cdn2.iconfinder.com/data/icons/font-awesome/1792/angellist-512.png' height={32} />
+                    </Link>
+                </Grid>
+                <Grid item xs={6} sm={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', flexDirection: 'column' }}>
+                    <Typography variant="h6" color="textPrimary" gutterBottom>
+                        Personal Site
+                    </Typography>
+                    <Link href="https://kcsarith.github.io/" target="_blank" variant="subtitle1" color="textSecondary">
+                        <img src='https://cdn.onlinewebfonts.com/svg/img_379085.png' height={32} />
+                    </Link>
+                </Grid>
             </Grid>
             <Box mt={5}>
                 <Copyright />
@@ -108,3 +128,32 @@ export default function SiteHeader() {
         </Container>
     )
 }
+// export default function GOODSiteFooter() {
+
+//     const classes = useStyles();
+//     return (
+//         <Container maxWidth="md" component="footer" className={classes.footer}>
+//             <Grid container spacing={4} justify="space-evenly">
+//                 {footers.map((footer) => (
+//                     <Grid item xs={6} sm={3} key={footer.title}>
+//                         <Typography variant="h6" color="textPrimary" gutterBottom>
+//                             {footer.title}
+//                         </Typography>
+//                         <ul>
+//                             {footer.description.map((item) => (
+//                                 <li key={item}>
+//                                     <Link href="#" variant="subtitle1" color="textSecondary">
+//                                         {item}
+//                                     </Link>
+//                                 </li>
+//                             ))}
+//                         </ul>
+//                     </Grid>
+//                 ))}
+//             </Grid>
+//             <Box mt={5}>
+//                 <Copyright />
+//             </Box>
+//         </Container>
+//     )
+// }

@@ -134,6 +134,8 @@ export default function WorkspaceMyTasks() {
             setMyTasks(res.data.tasks);
         }
         fetchData();
+
+        console.log(parseInt(window.location.href.split('my-tasks/')[1]))
     }, [workspaceId]); // Or [] if effect doesn't need props or state
 
     const handleMyTaskClick = e => {
@@ -156,12 +158,20 @@ export default function WorkspaceMyTasks() {
     const handleMyTaskOnChange = e => {
         let value = e.target.value;
         let prev = [...myTasks];
+
+        const sideBarTaskId = parseInt(e.target.id.split('my-task_')[1], 10);
         const currentTask = { ...prev[currentTaskLo] }
         currentTask.name = value;
         prev.splice(currentTaskLo, 1, currentTask);
         setSingleTaskName(e.target.value);
         setMyTasks(prev);
-        console.log(myTasks[currentTaskLo].name)
+        async function fetchData() {
+            const res = await dispatch(patchTaskName(sideBarTaskId, e.target.value));
+        }
+
+        if (singleTaskName) {
+            fetchData();
+        }
     }
 
     const handleMyTaskOnBlur = e => {
@@ -244,15 +254,16 @@ export default function WorkspaceMyTasks() {
                     </Grid>
                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                     <DragDropContext onDragEnd={handleOnDragEnd}>
-                        <Grid item sm={6} align="left"><h2>Recently Assigned</h2></Grid>
+                        <Grid item sm={6} align="left"><h2>Recently Assigned</h2><h3>Warning! Editing tasks too fast can lead to crashing.</h3></Grid>
                         <Grid item sm={6} align="right"><h2>Due Date</h2></Grid>
                         <Droppable droppableId='droppable_my-task'>
                             {(provided) => (
                                 <Grid container direction="row" justify="space-between" spacing={0} className={classes.whiteBg} innerRef={provided.innerRef} {...provided.droppableProps} >
                                     {myTasks.length > 0 && myTasks.map((task, index) => {
+                                        console.log(myTasks.length - task.listOrder);
                                         return <Draggable key={task.id} draggableId={`draggable-task_${task.id}`} index={index}>
                                             {provided => (
-                                                <Grid container {...provided.draggableProps} {...provided.dragHandleProps} innerRef={provided.innerRef}>
+                                                <Grid container {...provided.draggableProps} {...provided.dragHandleProps} innerRef={provided.innerRef} className={task.id === parseInt(window.location.href.split('my-tasks/')[1]) ? 'hover-highlight active' : 'hover-highlight'}>
                                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                                                     <Grid item sm={1} component={AppsIcon} />
                                                     <Grid item sm={1} component={CheckCircleOutlineIcon} color={(myTasks[myTasks.length - task.listOrder].status !== 'Completed') ? "secondary" : "primary"} />

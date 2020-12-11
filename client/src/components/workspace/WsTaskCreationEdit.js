@@ -139,12 +139,20 @@ export default function WsTaskCreationEdit({
         prev.splice(currentTaskLo, 1, currentTask);
         console.log(prev)
         setMyTasks(prev);
+
+        async function fetchData() {
+            const res = await dispatch(patchTaskName(taskId, e.target.value));
+        }
+
+        if (taskName) {
+            fetchData();
+        }
     }
 
     const handleDescriptionOnChange = e => {
         setTaskDescription(e.target.value);
         async function fetchData() {
-            // const res = await dispatch(patchTaskDescription(taskId, e.target.value));
+            const res = await dispatch(patchTaskDescription(taskId, e.target.value));
         }
         if (taskDescription) {
             fetchData();
@@ -185,16 +193,17 @@ export default function WsTaskCreationEdit({
         }
     }
 
-    const handleDeleteTask = () => {
+    const handleDeleteTask = (e) => {
         async function fetchData() {
+            alert('DELETED A TASK')
             // You can await here
             const res = await dispatch(deleteTask(taskId));
             // taskInfo[sideBarTaskId].name = e.target.value
-            // console.log(res);
-            history.push('/workspace/1/my-tasks')
+            console.log(res);
             console.log(res)
         }
         fetchData();
+        // history.push('/workspace/1/my-tasks')
     }
     const handleAddComment = () => {
         console.log(authInfo.id)
@@ -226,7 +235,7 @@ export default function WsTaskCreationEdit({
                 {taskStatus !== 'Completed' ?
                     <Grid item sm={6} align="left"><Button variant="contained" onClick={handleMarkComplete} color="primary">Mark Complete</Button></Grid> :
                     <Grid item sm={6} align="left"><Button variant="contained" onClick={handleMarkComplete} color="secondary">Mark Incomplete</Button></Grid>}
-                <Grid item sm={6} align="right"><Button color="primary" onClick={handleDeleteTask}><CloseIcon /></Button></Grid>
+                <Grid item sm={6} align="right"><a color="primary" href="/workspace/1/my-tasks" id="delete-task-x" onClick={handleDeleteTask}><CloseIcon /></a></Grid>
                 <Grid item sm={12} align="left"><TextareaAutosize resize='none' className={classes.titleTextArea} onChange={handleNameOnChange} value={taskName} variant="outlined" /></Grid>
                 <Grid item sm={3} align="left">Assignee</Grid>
                 <Grid item sm={9} align="left"><Avatar>df</Avatar></Grid>

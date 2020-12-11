@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, List, Divider, IconButton, ListItem, Avatar } from '@material-ui/core';
+import { Drawer, AppBar, Toolbar, List, Divider, IconButton, ListItem, Avatar, Grid, Typography, Container, Box } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -22,6 +22,16 @@ import WsMyTasksAppbar from './WsMyTasksAppbar'
 import WsProjectAppbar from './WsProjectAppbar'
 import { ClassRounded } from '@material-ui/icons';
 const drawerWidth = 240;
+function Copyright() {
+    return (
+        <Typography variant="body1" color="white" text='center'>
+            {'© '}
+                Krisna Sarith
+            {' '}
+            {new Date().getFullYear()}
+        </Typography>
+    );
+}
 
 const useStyles = makeStyles((theme) => ({
     darkRoot: {
@@ -95,7 +105,21 @@ const useStyles = makeStyles((theme) => ({
         height: '24px !important',
         width: '24px !important',
         margin: '2px'
-    }
+    },
+    footer: {
+        borderTop: `1px solid ${theme.palette.divider}`,
+        marginTop: theme.spacing(8),
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3),
+        position: 'absolute',
+        bottom: 0,
+        marginBottom: 0,
+        // bottom: 0,
+        // [theme.breakpoints.up('sm')]: {
+        //     paddingTop: theme.spacing(6),
+        //     paddingBottom: theme.spacing(6),
+        // },
+    },
 }));
 export default function WsDrawer() {
     const classes = useStyles();
@@ -124,6 +148,7 @@ export default function WsDrawer() {
                 classes={{
                     paper: classes.drawerPaper,
                 }}
+            // style={{ minHeight: '100vh' }}
             >
                 <div className={classes.drawerHeader}>
                     <IconButton onClick={handleDrawerClose}>
@@ -152,6 +177,36 @@ export default function WsDrawer() {
                         My Project
                     </ListItem>
                 </List>
+                <Container maxWidth="md" component="footer" className={classes.footer}>
+                    <Grid container spacing={4} justify="space-evenly">
+                        <Grid item xs={12} style={{ display: 'flex' }}>
+                            {/* <Typography variant="h6" color="white" style={{ textAlign: 'center' }} gutterBottom>Social Media Links</Typography> */}
+                        </Grid>
+                        <Grid item xs={3} style={{ display: 'flex', color: 'white', alignContent: 'center', alignItems: 'center', verticalAlign: 'middle', fontSize: '16px' }}>
+                            <a href="https://github.com/kcsarith" target="_blank">
+                                <img src='https://www.flaticon.com/svg/static/icons/svg/25/25231.svg' style={{ filter: 'invert(1)' }} height={32} />
+                            </a>
+                        </Grid>
+                        <Grid item xs={3} style={{ display: 'flex' }}>
+                            <a href="https://www.linkedin.com/in/krisna-sarith-11788b1b9" target="_blank" variant="subtitle1" color="textSecondary">
+                                <img src='https://image.flaticon.com/icons/png/512/61/61109.png' style={{ filter: 'invert(1)' }} height={32} />
+                            </a>
+                        </Grid>
+                        <Grid item xs={3} style={{ display: 'flex' }}>
+                            <a href="https://angel.co/u/krisna-charlie-sarith" target="_blank" variant="subtitle1" color="textSecondary">
+                                <img src='https://cdn2.iconfinder.com/data/icons/font-awesome/1792/angellist-512.png' style={{ filter: 'invert(1)' }} height={32} />
+                            </a>
+                        </Grid>
+                        <Grid item xs={3} style={{ display: 'flex' }}>
+                            <a href="https://kcsarith.github.io/" target="_blank" variant="subtitle1" color="textSecondary">
+                                <img src='https://cdn.onlinewebfonts.com/svg/img_379085.png' style={{ filter: 'invert(1)' }} height={32} />
+                            </a>
+                        </Grid>
+                    </Grid>
+                    <Box mt={5}>
+                        <Copyright />
+                    </Box>
+                </Container>
             </Drawer>
 
             <main

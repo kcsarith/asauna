@@ -4,7 +4,7 @@ import { CssBaseline } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import Pages from './pages/Pages';
 import { setUser } from './store/auth'
-
+import './index.css';
 function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ function App() {
     <>
       <CssBaseline />
       <BrowserRouter>
-          <Pages />
+        <Pages />
       </BrowserRouter>
     </>
   );

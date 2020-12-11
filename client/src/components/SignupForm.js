@@ -111,9 +111,9 @@ export default function SignUp() {
                         </Grid>
                     </Grid>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={8}>
+                        <Grid item xs={12}>
                             <form className={classes.form} onSubmit={handleSubmit}>
-                                <Grid container spacing={2}>
+                                <Grid container spacing={1}>
                                     <Grid item xs={12} sm={12}>
                                         <label>Username</label>
                                         <TextField
@@ -175,10 +175,6 @@ export default function SignUp() {
 
                             </form>
 
-                        </Grid>
-
-                        <Grid item xs={12} sm={4} >
-                            <Avatar className={classes.profileImage}></Avatar>
                         </Grid>
                     </Grid>
 

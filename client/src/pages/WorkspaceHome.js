@@ -48,7 +48,7 @@ export default function WorkspaceHome() {
     }
     return (
         <>
-            <Container maxWidth="sm" className={classes.whiteBg}>
+            <Container maxWidth="md" className={classes.whiteBg}>
                 <Grid
                     container
                     direction="row"
@@ -63,10 +63,10 @@ export default function WorkspaceHome() {
                     <Grid item sm={12} align="center">
                         {tasksDueState.length > 0 && tasksDueState.map((task, index) => {
                             return (
-                                <Grid container key={index}>
+                                <Grid container key={index} className='hover-highlight'>
                                     <Grid item sm={12}><Divider className={classes.darken} /></Grid>
                                     <Grid item sm={1} component={AppsIcon} />
-                                    <Grid item sm={7} component={InputBase} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} value={task.name} fullWidth onClick={() => history.push(`/workspace/1/my-tasks/${task.id}`)} align="left" >{task.name}</Grid>
+                                    <Grid item sm={7} id={`my-task_${task.id}`} className={`my-task-lo_${task.listOrder}`} value={task.name} fullWidth onClick={() => history.push(`/workspace/1/my-tasks/${task.id}`)} align="left" >{task.name}</Grid>
                                     <Grid item sm={2} align="right">{task.dueDate.slice(0, 10)}</Grid>
                                 </Grid>
                             )

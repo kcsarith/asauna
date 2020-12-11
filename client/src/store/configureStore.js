@@ -5,14 +5,12 @@ import auth from './auth';
 import signup from './signup';
 import workspace from './workspace'
 import task from './task';
-import columnTodo from './columns-todo';
 import comment from './comment';
 const rootReducer = combineReducers({
   auth,
   signup,
   workspace,
   task,
-  columnTodo,
   comment
 });
 

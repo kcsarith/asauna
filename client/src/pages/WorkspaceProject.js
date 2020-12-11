@@ -119,7 +119,8 @@ function WorkspaceProject() {
                 })}
             </DragDropContext>
             < div className={"droppable-col"} >
-                <p>The list</p>
+                <h1 style={{ textAlign: 'center' }}>The list</h1>
+                <h3 style={{ textAlign: 'center' }}>This page is current in progress. Items can be moved to the "Completed Column" from by completing taks found in the <a href='/workspace/1/my-tasks'>My Tasks link</a>.</h3>
             </div>
         </div >
     );
