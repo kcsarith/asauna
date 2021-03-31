@@ -1,5 +1,5 @@
 # Asauna
-View the app on this page
+View the app on this pagex
 
 https://notasana.herokuapp.com/
 
