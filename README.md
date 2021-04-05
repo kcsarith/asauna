@@ -33,4 +33,4 @@ The drawers on the left pane can open and close.
 1. One will take to the tasks which shows tasks that are due within a week.
 2. The other tab will show all tasks
 
-This is currently unfinished, as there are no functionality in this app.
+This is currently unfinished
